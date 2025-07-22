@@ -28,4 +28,20 @@ class Diary extends Model
     {
         return $this->belongsTo(User::class);
     }
+
+    public function aiFeedback()
+    {
+        return $this->hasOne(AiFeedback::class);
+    }
+
+    public function emotionLogs()
+    {
+        return $this->hasMany(EmotionLog::class);
+    }
+
+    public function tags()
+    {
+        return $this->belongsToMany(Tag::class, 'diary_tag');
+    }
+    
 }

@@ -49,4 +49,9 @@ class User extends Authenticatable
     {
         return $this->hasMany(Diary::class);
     }
+
+    public function socialAccounts()
+    {
+        return $this->hasMany(SocialAccount::class);
+    }
 }

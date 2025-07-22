@@ -5,9 +5,9 @@ namespace Database\Factories;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Diary>
+ * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\SocialAccount>
  */
-class DiaryFactory extends Factory
+class SocialAccountFactory extends Factory
 {
     /**
      * Define the model's default state.
@@ -17,9 +17,10 @@ class DiaryFactory extends Factory
     public function definition(): array
     {
         return [
-            'title' => $this->faker->sentence(5),
-            'content' => $this->faker->paragraph(3),
-            'emotion_state' => $this->faker->randomElement(['happy', 'sad', 'neutral']),
+            'provider_name' => 'google',
+            'provider_id' => $this->faker->uuid(),
+            'avatar' => $this->faker->imageUrl(100, 100),
+            'email' => $this->faker->unique()->safeEmail(),
             'created_at' => now(),
             'updated_at' => now(),
         ];

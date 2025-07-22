@@ -5,9 +5,9 @@ namespace Database\Factories;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Diary>
+ * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\EmotionLog>
  */
-class DiaryFactory extends Factory
+class EmotionLogFactory extends Factory
 {
     /**
      * Define the model's default state.
@@ -17,11 +17,9 @@ class DiaryFactory extends Factory
     public function definition(): array
     {
         return [
-            'title' => $this->faker->sentence(5),
-            'content' => $this->faker->paragraph(3),
             'emotion_state' => $this->faker->randomElement(['happy', 'sad', 'neutral']),
-            'created_at' => now(),
-            'updated_at' => now(),
+            'score' => $this->faker->randomFloat(2, 0, 1),
+            'created_at' => $this->faker->dateTimeBetween('-7 days', 'now'),
         ];
     }
 }

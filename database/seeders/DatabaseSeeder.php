@@ -15,7 +15,11 @@ class DatabaseSeeder extends Seeder
     {
         $this->call([
             UserSeeder::class,
-            // 他のシーダーをここに追加できます
+            AiFeedbackSeeder::class,
+            EmotionLogSeeder::class,
+            TagSeeder::class,
+            DiaryTagSeeder::class,
+            SocialAccountSeeder::class,
         ]);
     }
 }
