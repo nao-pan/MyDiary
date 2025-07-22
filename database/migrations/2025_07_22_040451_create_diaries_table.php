@@ -16,7 +16,7 @@ return new class extends Migration
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
             $table->string('title');
             $table->text('content');
-            $table->string('emotion_state'); // enumはEnumクラスと連携してもOK
+            $table->enum('emotion_state', ['happy', 'sad', 'neutral'])->default('neutral');
             $table->timestamps();
         });
     }

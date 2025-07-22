@@ -16,6 +16,7 @@ return new class extends Migration
             $table->string('name');
             $table->string('email')->unique();
             $table->string('password');
+            $table->rememberToken(); // nullable string 100文字（remember me 用）
             $table->timestamps();
         });
     }
