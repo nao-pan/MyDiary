@@ -21,10 +21,10 @@ class AiFeedbackFactory extends Factory
             'advice' => $this->faker->paragraph(),
             'raw_response' =>  json_encode([
                 'model' => 'gpt-4',
-                'content' => $this->faker->paragraph(2),
+                'content' => implode("\n", $this->faker->paragraphs(2)),
             ]),
-            'created_at' => $this->faker->now(),
-            'updated_at' => $this->faker->now(),
+            'created_at' => $this->faker->dateTime(),
+            'updated_at' => $this->faker->dateTime(),
         ];
     }
 }

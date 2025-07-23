@@ -3,6 +3,7 @@
 namespace Database\Factories;
 
 use Illuminate\Database\Eloquent\Factories\Factory;
+use Carbon\Carbon;
 
 /**
  * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\SocialAccount>
@@ -18,11 +19,11 @@ class SocialAccountFactory extends Factory
     {
         return [
             'provider_name' => 'google',
-            'provider_id' => $this->faker->uuid(),
-            'avatar' => $this->faker->imageUrl(100, 100),
+            'provider_id' => $this->faker->uuid,
+            'email' => $this->faker->unique(false)->safeEmail(),
             'email' => $this->faker->unique()->safeEmail(),
-            'created_at' => now(),
-            'updated_at' => now(),
+            'created_at' => Carbon::now(),
+            'updated_at' => Carbon::now(),
         ];
     }
 }

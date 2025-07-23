@@ -21,8 +21,6 @@ class UserFactory extends Factory
             'name' => $this->faker->name(),
             'email' => $this->faker->unique()->safeEmail(),
             'password' => bcrypt('password'),
-            'created_at' => now(),
-            'updated_at' => now(),
         ];
     }
 }
