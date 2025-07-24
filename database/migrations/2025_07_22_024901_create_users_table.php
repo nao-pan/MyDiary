@@ -1,11 +1,17 @@
 <?php
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
+    /**
+     * The name of the table.
+     */
+    protected string $table = 'users';
+
     /**
      * Run the migrations.
      */

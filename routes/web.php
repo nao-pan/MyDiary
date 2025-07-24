@@ -3,6 +3,7 @@
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\DiaryController;
+use App\Http\Controllers\PostController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -19,9 +20,8 @@ Route::middleware('auth')->group(function () {
 });
 
 require __DIR__.'/auth.php';
-
 Route::middleware(['auth'])->group(function () {
-    Route::get('/diary/create', [DiaryController::class, 'create'])->name('diary.create');
-    Route::post('/diary', [DiaryController::class, 'store'])->name('diary.store');
     Route::resource('diary', DiaryController::class);
 });
+
+Route::get('/posts', [PostController::class, 'index'])->name('posts.index');

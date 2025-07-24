@@ -54,4 +54,19 @@ class User extends Authenticatable
     {
         return $this->hasMany(SocialAccount::class);
     }
+
+    public function getAllUsers()
+    {
+        return self::all();
+    }
+
+    public function getUserById(int $id)
+    {
+        return self::find($id);
+    }
+
+    public function createUser(array $data)
+    {
+        return self::create($data);
+    }
 }

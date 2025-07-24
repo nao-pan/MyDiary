@@ -2,12 +2,17 @@
 
 namespace App\Models;
 
+use App\Enums\EmotionState;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Diary extends Model
 {
     use HasFactory;
+
+    protected $casts = [
+        'emotion_state' => EmotionState::class, // 感情状態を列挙型としてキャスト
+    ];
 
     /**
      * The attributes that are mass assignable.
