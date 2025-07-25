@@ -8,16 +8,8 @@ use App\Models\Diary;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\View\View;
-use Illuminate\Http\Response;
-use Illuminate\Support\Facades\Validator;
-use Illuminate\Validation\ValidationException;
 use App\Services\DiaryService;
-use App\Models\EmotionLog;
-use App\Models\EmotionColor;
-use Carbon\Carbon;
-use App\Enums\EmotionState;
-use Illuminate\Support\Str;
-use Illuminate\Validation\Rule;
+use App\Services\EmotionUnlockService;
 
 class DiaryController extends Controller
 {
@@ -29,58 +21,15 @@ class DiaryController extends Controller
         $this->middleware('auth'); // 認証ミドルウェアを適用
     }
 
+
     public function index()
     {
         $user = Auth::user();
-        $startOfMonth = Carbon::now()->startOfMonth();
-        $endOfMonth = Carbon::now()->endOfMonth();
 
-        // 月ごとの感情ログを取得
-        $logs = EmotionLog::with('diary')
-            ->whereBetween('created_at', [$startOfMonth, $endOfMonth])
-            ->whereHas('diary', function ($query) use ($user) {
-                $query->where('user_id', $user->id);
-            })
-            ->get();
+        $calendarEvents = $this->diaryService->getCalendarEventsForUser($user);
+        $recentDiaries = $this->diaryService->getRecentDiaries($user, 5);
 
-        // ユーザー設定の感情色を取得
-        $customColors = EmotionColor::where('user_id', $user->id)
-            ->pluck('color_code', 'emotion_state');
-
-        $calendarEvents = $logs->map(function ($log) use ($customColors) {
-            $enum = $log->emotion_state;
-            $date = $log->created_at->format('Y-m-d');
-            $textColor = $enum->textColor(); // Enumからテキストカラーを取得
-            return [
-                // 背景色を設定
-                [
-                'title' => '',
-                'start' => $date,
-                'display' => 'background',
-                'color' => $customColors[$log->emotion_state->value] ?? $enum->color(), // デフォルトの色を使用
-                ],
-                // 日記のタイトルとリンクを設定
-                [
-                    'title' => Str::limit($log->diary->title ?? '',12),
-                    'start' => $date,
-                    'url' => route('diary.show', $log->diary->id),
-                    'color' => $customColors[$log->emotion_state->value] ?? $enum->color(), // デフォルトの色を使用
-                    'textColor' => $textColor,
-                ]
-            ];
-        })->flatten(1);
-        // 最近の日記（新しい順）5件
-        $recentDiaries = Diary::where('user_id', $user->id)
-            ->latest('created_at')
-            ->take(5)
-            ->get();
-
-
-        return view('diary.index', [
-            'calendarEvents' => $calendarEvents,
-            'recentDiaries' => $recentDiaries,
-        ]);
-
+        return view('diary.index', compact('calendarEvents', 'recentDiaries'));
     }
 
     // 新しい日記エントリ作成フォームを表示する処理
@@ -96,10 +45,13 @@ class DiaryController extends Controller
         $validatedData = $request->validate([
             'title' => 'required|string|max:255',
             'content' => 'required|string',
-            'emotion_state' => ['required', Rule::in(EmotionState::values())], // 感情状態のバリデーション
+            'emotion_state' => ['required'], // 感情状態のバリデーション
         ]);
 
-        $this->diaryService->createWithEmotion($validatedData);
+        $diary = $this->diaryService->createWithEmotion($validatedData);
+        // 感情のアンロックチェック
+        $emotionUnlockService = new EmotionUnlockService();
+        $emotionUnlockService->checkAndUnlock($diary);
         return redirect()->route('diary.index')->with('success', '日記を投稿しました。');
     }
 

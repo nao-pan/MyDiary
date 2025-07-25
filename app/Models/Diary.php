@@ -6,6 +6,7 @@ use App\Enums\EmotionState;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
+
 class Diary extends Model
 {
     use HasFactory;
@@ -31,9 +32,9 @@ class Diary extends Model
         return $this->belongsTo(User::class);
     }
 
-    public function emotionLog()
+    public function emotionLogs()
     {
-        return $this->hasOne(EmotionLog::class);
+        return $this->hasMany(\App\Models\EmotionLog::class);
     }
 
     public function tags()

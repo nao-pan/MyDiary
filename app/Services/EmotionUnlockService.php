@@ -4,30 +4,58 @@ use App\Models\EmotionLog;
 use App\Enums\EmotionState;
 use Illuminate\Support\Facades\DB;
 use App\Models\User;
+use App\Models\UnlockedEmotion;
+use Illuminate\Support\Facades\Auth;
+use App\Models\Diary;
 
 class EmotionUnlockService
 {
-    public function unlockedEmotions(User $user): array
+
+public function checkAndUnlock(Diary $diary): void
     {
-        $counts = EmotionLog::where('user_id', $user->id)
-                    ->select('emotion_state', DB::raw('count(*) as count'))
-                    ->groupBy('emotion_state')
-                    ->pluck('count', 'emotion_state');
+        $userId = $diary->user_id;
 
-        $unlocked = [
-            EmotionState::HAPPY,
-            EmotionState::SAD,
-            EmotionState::FEAR,
-            EmotionState::ANGRY,
-        ];
+        foreach (EmotionState::cases() as $emotion) {
+            // 初期解禁感情はスキップ
+            if ($emotion->isInitiallyUnlocked()) {
+                continue;
+            }
 
-        if (($counts['happy'] ?? 0) >= 10) {
-            $unlocked[] = EmotionState::GRATEFUL;
+            // すでに解禁済みならスキップ
+            $alreadyUnlocked = UnlockedEmotion::where('user_id', $userId)
+                ->where('emotion_state', $emotion->value)
+                ->exists();
+
+            if ($alreadyUnlocked) {
+                continue;
+            }
+
+            // ベース感情を Enum 側で定義していると仮定して、その投稿数を数える
+            $baseEmotion = $emotion->unlockBaseEmotion();
+            $required = $emotion->unlockThreshold();
+
+            if (is_null($baseEmotion) || is_null($required)) {
+                continue;
+            }
+
+            $count = EmotionLog::whereHas('diary', fn($q) => $q->where('user_id', $userId))
+                               ->where('emotion_state', $baseEmotion->value)
+                               ->count();
+
+            if ($count >= $required) {
+                UnlockedEmotion::create([
+                    'user_id' => $userId,
+                    'emotion_state' => $emotion->value,
+                    'diary_id' => $diary->id,
+                    'unlocked_at' => now(),
+                ]);
+            }
         }
-        if (($counts['sad'] ?? 0) >= 10) {
-            $unlocked[] = EmotionState::MELANCHOLY;
-        }
-
-        return $unlocked;
+    }
+    public function getUnlockedEmotions(): array
+    {
+        return UnlockedEmotion::where('user_id', Auth::id())
+                              ->pluck('emotion_state')
+                              ->toArray();
     }
 }

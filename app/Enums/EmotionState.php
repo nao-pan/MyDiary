@@ -14,7 +14,7 @@ enum EmotionState: string
     case FUN = 'fun';
 
 
-    // アドバンス感情
+        // アドバンス感情
     case EXCITED = 'excited';
     case ANXIOUS = 'anxious';
     case CONFUSED = 'confused';
@@ -27,7 +27,7 @@ enum EmotionState: string
      */
     public function label(): string
     {
-        return match($this) {
+        return match ($this) {
             self::FUN => '楽しい',
             self::HAPPY => '嬉しい',
             self::SAD => '悲しい',
@@ -50,7 +50,7 @@ enum EmotionState: string
      */
     public function color(): string
     {
-        return match($this) {
+        return match ($this) {
             self::FUN => '#FFEB3B', // Yellow
             self::HAPPY => '#4CAF50', // Green
             self::SAD => '#2196F3', // Blue
@@ -70,23 +70,35 @@ enum EmotionState: string
 
     public function textColor(): string
     {
-        return match($this) {
+        return match ($this) {
             self::HAPPY, self::CALM, self::NEUTRAL, self::GRATEFUL, self::HOPEFUL => '#000000', // Black for light colors
             default => '#FFFFFF', // White for dark colors
         };
     }
 
-    public function unlockThreshold(): int
-{
-    return match ($this) {
-        self::HAPPY => 0,
-        self::SAD => 5,
-        self::ANGRY => 10,
-        self::ANXIOUS => 15,
-        self::MELANCHOLY => 20,
-        default => 30, // デフォルトは0
-    };
-}
+    public function unlockThreshold(): ?int
+    {
+        return match ($this) {
+            self::HAPPY, self::SAD, self::ANGRY, self::FEAR => null, // 初期解禁
+            self::GRATEFUL => 3,
+            self::MELANCHOLY => 7,
+            default => 30, // その他の感情は30回
+        };
+    }
+
+    public function unlockBaseEmotion(): ?self
+    {
+        return match ($this) {
+            self::GRATEFUL => self::HAPPY,
+            self::MELANCHOLY => self::SAD,
+            default => null,
+        };
+    }
+
+    public function isInitiallyUnlocked(): bool
+    {
+        return is_null($this->unlockThreshold());
+    }
 
     /**
      * 全てのケースの値を取得

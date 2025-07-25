@@ -70,4 +70,9 @@ class User extends Authenticatable
     {
         return self::create($data);
     }
+
+    public function unlockedEmotions()
+    {
+        return $this->hasMany(UnlockedEmotion::class);
+    }
 }
