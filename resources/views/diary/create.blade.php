@@ -36,9 +36,19 @@
                 <textarea class="form-control" id="content" name="content" rows="5" required>{{ old('content') }}</textarea>
             </div>
 
-            {{-- 今後の追加予定：タグ、感情選択などをUIとして組み込む --}}
+                        <!-- 感情選択 -->
+            <div class="mb-4">
+                <label class="block font-semibold mb-1">感情</label>
+                <select name="emotion_state" class="w-full border rounded px-3 py-2">
+                    @foreach (App\Enums\EmotionState::cases() as $state)
+                        <option value="{{ $state->value }}" @selected(old('emotion_state') === $state->value)>
+                            {{ $state->label() }}
+                        </option>
+                    @endforeach
+                </select>
+            </div>
 
-            <button type="submit" class="btn btn-primary">投稿する</button>
+            <button type="submit" class="bg-blue-500 hover:bg-blue-600 text-white font-semibold px-4 py-2 rounded">投稿する</button>
         </form>
     </div>
 @endsection

@@ -10,9 +10,7 @@ class Diary extends Model
 {
     use HasFactory;
 
-    protected $casts = [
-        'emotion_state' => EmotionState::class, // 感情状態を列挙型としてキャスト
-    ];
+
 
     /**
      * The attributes that are mass assignable.
@@ -22,8 +20,7 @@ class Diary extends Model
     protected $fillable = [
         'title',
         'content',
-        'user_id',
-        'emotion_state'
+        'user_id'
     ];
 
     /**
@@ -34,14 +31,9 @@ class Diary extends Model
         return $this->belongsTo(User::class);
     }
 
-    public function aiFeedback()
+    public function emotionLog()
     {
-        return $this->hasOne(AiFeedback::class);
-    }
-
-    public function emotionLogs()
-    {
-        return $this->hasMany(EmotionLog::class);
+        return $this->hasOne(EmotionLog::class);
     }
 
     public function tags()

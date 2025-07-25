@@ -11,13 +11,14 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('ai_feedbacks', function (Blueprint $table) {
+        Schema::create('emotion_colors', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('diary_id')->constrained()->onDelete('cascade');
-            $table->text('summary');
-            $table->text('advice');
-            $table->json('raw_response')->nullable();
+            $table->foreignId('user_id')->conatrained()->onDelete('cascade');
+            $table->string('emotion_state'); // Enumで制御
+            $table->string('color_code', 7); // 例: #FFDDDD
             $table->timestamps();
+
+            $table->unique(['user_id', 'emotion_state']);
         });
     }
 
@@ -26,6 +27,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('ai_feedbacks');
+        Schema::dropIfExists('emotion_colors');
     }
 };

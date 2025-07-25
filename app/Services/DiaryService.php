@@ -12,22 +12,19 @@ class DiaryService
     public function createWithEmotion(array $data): Diary
     {
         return DB::transaction(function () use ($data) {
+            // 日記の作成
             $diary = Diary::create([
                 'user_id' => Auth::id(),
                 'title' => $data['title'],
                 'content' => $data['content'],
             ]);
 
-            // AIなどによる感情分析の代わりに仮データを使う
-            $emotion = [
-                'emotion_state' => 'happy',
-                'score' => 0.85,
-            ];
-
+            // 感情ログの作成
             EmotionLog::create([
                 'diary_id' => $diary->id,
-                'emotion_state' => $emotion['emotion_state'],
-                'score' => $emotion['score'],
+                'emotion_state' => $data['emotion_state'],
+                'score' => 1.0, // デフォルトスコア
+                'created_at' => now(),
             ]);
 
             return $diary;

@@ -2,7 +2,9 @@
 
 namespace Database\Factories;
 
+use App\Enums\EmotionState;
 use Illuminate\Database\Eloquent\Factories\Factory;
+use Illuminate\Support\Arr;
 
 /**
  * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\EmotionLog>
@@ -17,7 +19,7 @@ class EmotionLogFactory extends Factory
     public function definition(): array
     {
         return [
-            'emotion_state' => $this->faker->randomElement(['happy', 'sad', 'neutral']),
+            'emotion_state' => Arr::random(EmotionState::cases())->value,
             'score' => $this->faker->randomFloat(2, 0, 1),
             'created_at' => $this->faker->dateTimeBetween('-7 days', 'now'),
         ];

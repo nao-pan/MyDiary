@@ -2,30 +2,25 @@
 
 @section('content')
 <div class="container py-4">
-    <h1 class="mb-4">📓 日記一覧</h1>
-
-    {{-- 投稿メッセージ --}}
-    @if (session('success'))
-        <div class="alert alert-success">{{ session('success') }}</div>
-    @endif
-
-    {{-- 投稿があるか確認 --}}
-    @if ($diaries->isEmpty())
-        <p>まだ日記がありません。</p>
-    @else
-        <div class="list-group">
-            @foreach ($diaries as $diary)
-                <a href="{{ route('diary.show', $diary) }}" class="list-group-item list-group-item-action">
-                    <h5 class="mb-1">{{ $diary->title }}</h5>
-                    <small class="text-muted">{{ $diary->created_at->format('Y年m月d日') }}</small>
-                    <p class="mb-1 text-truncate">{{ Str::limit($diary->content, 100) }}</p>
-                </a>
-            @endforeach
-        </div>
-    @endif
-
-    <div class="mt-4">
-        <a href="{{ route('diary.create') }}" class="btn btn-primary">➕ 新しい日記を書く</a>
+    <div class="flex justify-between items-center mb-4">
+        <h1 class="text-xl font-bold">📅 日記カレンダー</h1>
+        <a href="{{ route('diary.create') }}" class="bg-blue-500 hover:bg-blue-600 text-white font-semibold px-4 py-2 rounded">
+            ➕ 新しい日記を書く
+        </a>
     </div>
+
+    {{-- カレンダー本体 --}}
+    <div id="calendar" class="w-full h-[600px] mb-6 bg-white shadow rounded" data-events='@json($calendarEvents)'></div>
+</div>
+
+    {{-- 最近の日記の一覧表示（任意） --}}
+    @foreach ($recentDiaries as $diary)
+        <div class="p-4 border-b">
+            <h2 class="text-lg font-bold">{{ $diary->title }}</h2>
+            <p class="text-sm text-gray-600">{{ $diary->created_at->format('Y/m/d') }}</p>
+            <p>{{ Str::limit($diary->content, 100) }}</p>
+            <a href="{{ route('diary.show', $diary->id) }}" class="text-blue-500 hover:underline">続きを読む</a>
+        </div>
+    @endforeach
 </div>
 @endsection

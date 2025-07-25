@@ -15,7 +15,6 @@ class DatabaseSeeder extends Seeder
     {
         $this->call([
             UserSeeder::class,
-            AiFeedbackSeeder::class,
             EmotionLogSeeder::class,
             TagSeeder::class,
             DiaryTagSeeder::class,

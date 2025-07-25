@@ -45,4 +45,54 @@ enum EmotionState: string
         };
     }
 
+    /**
+     * 表示用の色
+     */
+    public function color(): string
+    {
+        return match($this) {
+            self::FUN => '#FFEB3B', // Yellow
+            self::HAPPY => '#4CAF50', // Green
+            self::SAD => '#2196F3', // Blue
+            self::ANGRY => '#F44336', // Red
+            self::CALM => '#9E9E9E', // Grey
+            self::NEUTRAL => '#FFFFFF', // White
+            self::FEAR => '#9C27B0', // Purple
+            self::EXCITED => '#FF9800', // Orange
+            self::ANXIOUS => '#FF5722', // Deep Orange
+            self::CONFUSED => '#3F51B5', // Indigo
+            self::GRATEFUL => '#8BC34A', // Light Green
+            self::HOPEFUL => '#CDDC39', // Lime
+            self::MELANCHOLY => '#607D8B', // Blue Grey
+            default => '#000000', // Black for unknown emotions
+        };
+    }
+
+    public function textColor(): string
+    {
+        return match($this) {
+            self::HAPPY, self::CALM, self::NEUTRAL, self::GRATEFUL, self::HOPEFUL => '#000000', // Black for light colors
+            default => '#FFFFFF', // White for dark colors
+        };
+    }
+
+    public function unlockThreshold(): int
+{
+    return match ($this) {
+        self::HAPPY => 0,
+        self::SAD => 5,
+        self::ANGRY => 10,
+        self::ANXIOUS => 15,
+        self::MELANCHOLY => 20,
+        default => 30, // デフォルトは0
+    };
+}
+
+    /**
+     * 全てのケースの値を取得
+     */
+    public static function values(): array
+    {
+        return array_map(fn($case) => $case->value, self::cases());
+    }
 }

@@ -12,7 +12,7 @@ use Illuminate\View\View;
 class AuthenticatedSessionController extends Controller
 {
     /**
-     * Display the login view.
+     * ログイン画面の表示
      */
     public function create(): View
     {
@@ -20,7 +20,7 @@ class AuthenticatedSessionController extends Controller
     }
 
     /**
-     * Handle an incoming authentication request.
+     * ログイン処理
      */
     public function store(LoginRequest $request): RedirectResponse
     {
@@ -28,11 +28,11 @@ class AuthenticatedSessionController extends Controller
 
         $request->session()->regenerate();
 
-        return redirect()->intended(route('dashboard', absolute: false));
+        return redirect()->route('diary.index');
     }
 
     /**
-     * Destroy an authenticated session.
+     * ログアウト処理
      */
     public function destroy(Request $request): RedirectResponse
     {

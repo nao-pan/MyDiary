@@ -20,7 +20,6 @@ class DiaryFactory extends Factory
         return [
             'title' => $this->faker->sentence(5),
             'content' => $this->faker->paragraph(3),
-            'emotion_state' => $this->faker->randomElement(['happy', 'sad', 'neutral']),
             'created_at' => $createdAt,
             'updated_at' => $this->faker->dateTimeBetween($createdAt, 'now'),
         ];
