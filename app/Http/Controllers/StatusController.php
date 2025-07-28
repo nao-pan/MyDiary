@@ -37,7 +37,7 @@ class StatusController extends Controller
             $remaining = null;
             if(! $emotion->isInitiallyUnlocked() && $baseEmotion && $threshold !== null) {
                 $currentCount = $user->diaries()
-                    ->whereHas('emotionLogs', function ($query) use ($baseEmotion) {
+                    ->whereHas('emotionLog', function ($query) use ($baseEmotion) {
                         $query->where('emotion_state', $baseEmotion->value);
                     })->count();
                 $remaining = max(0, $threshold - $currentCount);

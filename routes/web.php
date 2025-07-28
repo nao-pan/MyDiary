@@ -3,19 +3,19 @@
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\DiaryController;
-use App\Http\Controllers\PostController;
 use App\Http\Controllers\StatusController;
 
+// 認証前のルーティング
 Route::get('/', function () {
-    return view('welcome');
+    return redirect()->route('diary.index');// 初期アクセス時は一覧ページへ
 });
+Route::get('/welcome', function () {
+    return view('welcome');
+})->name('welcome');
+// その他の静的ページ
+Route::view('/about', 'about')->name('about');
 
-Route::get('/dashboard', function () {
-    return view('dashboard');
-})->middleware(['auth', 'verified'])->name('dashboard');
-
-require __DIR__.'/auth.php';
-
+// 認証後のルーティング
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
@@ -23,8 +23,4 @@ Route::middleware('auth')->group(function () {
     Route::resource('diary', DiaryController::class);
     Route::resource('status', StatusController::class);
 });
-
-
-
-
-Route::get('/posts', [PostController::class, 'index'])->name('posts.index');
+require __DIR__.'/auth.php';

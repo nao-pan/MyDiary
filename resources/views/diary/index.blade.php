@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="container py-4">
+<div class="max-w-4xl mx-auto px-4 py-4">
     <div class="flex justify-between items-center mb-4">
         <h1 class="text-xl font-bold">📅 日記カレンダー</h1>
         <a href="{{ route('diary.create') }}" class="bg-blue-500 hover:bg-blue-600 text-white font-semibold px-4 py-2 rounded">
@@ -10,7 +10,7 @@
     </div>
 
     {{-- カレンダー本体 --}}
-    <div id="calendar" class="w-full h-[600px] mb-6 bg-white shadow rounded" data-events='@json($calendarEvents)'></div>
+    <div id="calendar" class="w-full max-w-3xl mx-auto h-[600px] mb-6 bg-white shadow rounded" data-events='@json($calendarEvents)'></div>
 </div>
 
     {{-- 最近の日記の一覧表示（任意） --}}
