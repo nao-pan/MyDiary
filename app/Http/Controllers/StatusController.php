@@ -6,10 +6,7 @@ use Illuminate\Http\Request;
 use App\Enums\EmotionState;
 use App\Models\Diary;
 use Illuminate\Support\Facades\Auth;
-use App\Http\Controllers\Controller;
-use App\Models\User;
 use App\Models\UnlockedEmotion;
-
 
 class StatusController extends Controller
 {
@@ -18,52 +15,59 @@ class StatusController extends Controller
         /** @var \App\Models\User $user */
         $user = Auth::user();
         $postCount = $user->diaries()->count();
+
         // 解禁済み感情（DBに記録されたもの）
         $unlockedEmotionStates = $user->unlockedEmotions()
-                                    ->pluck('emotion_state')
-                                    ->toArray();
+            ->pluck('emotion_state')
+            ->toArray();
 
         $statuses = EmotionState::cases();
 
-        $postCount = $user->diaries()->count();
-
-        $emotionStatuses = collect($statuses)->map(function ($emotion) use ($user, $unlockedEmotionStates) {
+        $emotionStatuses = collect($statuses)->map(function ($emotion) use ($user, $unlockedEmotionStates, $postCount) {
             $isUnlocked = $emotion->isInitiallyUnlocked() || in_array($emotion->value, $unlockedEmotionStates);
-
             $threshold = $emotion->unlockThreshold();
-            $baseEmotion = $emotion->unlockBaseEmotion();
+            $unlockType = $emotion->unlockType();
 
             $currentCount = 0;
             $remaining = null;
-            if(! $emotion->isInitiallyUnlocked() && $baseEmotion && $threshold !== null) {
-                $currentCount = $user->diaries()
-                    ->whereHas('emotionLog', function ($query) use ($baseEmotion) {
-                        $query->where('emotion_state', $baseEmotion->value);
-                    })->count();
-                $remaining = max(0, $threshold - $currentCount);
-            }    
-            // baseEmotionがnullの場合は、感情の解禁条件がまだないと仮定する
-            $remaining = $baseEmotion && $threshold !== null
-                ? max(0, $threshold - $currentCount)
-                : null;
+            $baseEmotion = null;
+
+            if (!$isUnlocked && $threshold !== null) {
+                if ($unlockType === 'post_count') {
+                    $currentCount = $postCount;
+                    $remaining = max(0, $threshold - $currentCount);
+
+                } elseif ($unlockType === 'base_emotion') {
+                    $baseEmotion = $emotion->unlockBaseEmotion();
+
+                    if ($baseEmotion) {
+                        $currentCount = $user->diaries()
+                            ->whereHas('emotionLog', function ($query) use ($baseEmotion) {
+                                $query->where('emotion_state', $baseEmotion->value);
+                            })->count();
+
+                        $remaining = max(0, $threshold - $currentCount);
+                    }
+                }
+            }
+
             return [
                 'label' => $emotion->label(),
                 'color' => $emotion->color(),
                 'unlocked' => $isUnlocked,
                 'required' => $threshold,
-                'base_emotion' => $baseEmotion ? $baseEmotion->label() : null,
+                'base_emotion' => $baseEmotion?->label(),
                 'current_count' => $currentCount,
                 'remaining' => $remaining,
                 'text_color' => $emotion->textColor(),
                 'is_initial' => $emotion->isInitiallyUnlocked(),
+                'unlock_type' => $unlockType,
             ];
         });
-        
 
         return view('status.index', [
-            'postCount'=>$postCount,
-            'emotionStatuses'=> $emotionStatuses->sortByDesc('unlocked')->values()
+            'postCount' => $postCount,
+            'emotionStatuses' => $emotionStatuses->sortByDesc('unlocked')->values(),
         ]);
     }
-
 }

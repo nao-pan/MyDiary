@@ -5,6 +5,8 @@ namespace App\Providers;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\Str;
+use App\Models\Diary;
+use App\Policies\DiaryPolicy;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -22,7 +24,7 @@ class AppServiceProvider extends ServiceProvider
     public function boot(): void
     {
         Blade::directive('strlimit', function ($expression) {
-        return "<?php echo \Illuminate\Support\Str::limit($expression); ?>";
-    });
+            return "<?php echo \Illuminate\Support\Str::limit($expression); ?>";
+        });
     }
 }

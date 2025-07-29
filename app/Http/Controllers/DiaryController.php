@@ -10,6 +10,7 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\View\View;
 use App\Services\DiaryService;
 use App\Services\EmotionUnlockService;
+use App\Enums\EmotionState;
 
 class DiaryController extends Controller
 {
@@ -33,9 +34,16 @@ class DiaryController extends Controller
     }
 
     // 新しい日記エントリ作成フォームを表示する処理
-    public function create(): View
+    public function create(EmotionUnlockService $unlockservice): View
     {
-        return view('diary.create');
+        $unlockedEmotionKeys = $unlockservice->getUnlockedEmotions();
+
+        $availableEmotions = array_filter(EmotionState::cases(), function ($state) use ($unlockedEmotionKeys) {
+        return $state->isInitiallyUnlocked() || in_array($state->value, $unlockedEmotionKeys);
+    });
+        return view('diary.create',[
+            'emotionStates' => $availableEmotions,
+        ]);
     }
 
     // 日記エントリを保存する処理
@@ -47,7 +55,7 @@ class DiaryController extends Controller
             'content' => 'required|string',
             'emotion_state' => ['required'], // 感情状態のバリデーション
             'emotion_score' => 'required|numeric|in:0.2,0.4,0.6,0.8,1.0', // 感情スコアのバリデーション
-            'hapinness_score' => 'nulalble|integer|min:1|max10', // ハピネススコアのバリデーション
+            'happinness_score' => 'nulalble|integer|min:1|max10', // ハピネススコアのバリデーション
         ]);
 
         $diary = $this->diaryService->createWithEmotion($validatedData);
@@ -67,6 +75,8 @@ class DiaryController extends Controller
             'user',
             'emotionLog'
         ])->findOrFail($id);
+
+        $this->authorize('view', $diary);
 
         // Enum変換などの処理（EmotionState表示用）
         $emotionLabel = $diary->emotionLog->emotion_state->label(); // 例: EmotionState::from($diary->emotion_state)->label()

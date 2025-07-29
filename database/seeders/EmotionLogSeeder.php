@@ -18,7 +18,7 @@ class EmotionLogSeeder extends Seeder
             // 各日記に対してEmotionLogを生成
             EmotionLog::factory()
                 ->for($diary)
-                ->count(3) // 各日記に3つのEmotionLogを紐づける
+                ->count(1)
                 ->create();
         });
     }

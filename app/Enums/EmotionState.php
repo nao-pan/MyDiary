@@ -8,19 +8,56 @@ enum EmotionState: string
     case HAPPY = 'happy';
     case SAD = 'sad';
     case ANGRY = 'angry';
+    case FEAR = 'fear';
+    case SURPURISED = 'surprise';
+    case DISGUSTED = 'disgusted';
+
+    // Happy系統
+    case FUN = 'fun';
+    case PROUD = 'proud';
+    case GRATEFUL = 'grateful';
+    case RELIEVED = 'relieved';
+
+    // Sad系統
+    case DISAPPOINTED = 'disappointed';
+    case LONELY = 'lonely';
+    case HEARTBROKEN = 'heartbroken';
+    case MELANCHOLY = 'melancholy';
+
+    // angry系統
+    case IRRITATED = 'irritated';
+    case FRUSTRATED = 'frustrated';
+    case FED_UP = 'fed_up';
+
+    // fear系統
+    case NERVOUS = 'nervous';
+    case WORRIED = 'worried';
+    case ANXIOUS = 'anxious';
+
+    // surprised系統
+    case SHAKEN = 'shaken';
+    case STUNNED = 'stunned';
+    case EXCITED = 'excited';
+
+    // disgust系統
+    case REJECTING = 'rejecting';
+    case FED_UP_AGAIN = 'fed_up_again';
+    case NAUSEATED = 'nauseated';
+
+
     case CALM = 'calm';
     case NEUTRAL = 'neutral';
-    case FEAR = 'fear';
-    case FUN = 'fun';
+    case HOPEFUL = 'hopeful';
+
 
 
         // アドバンス感情
-    case EXCITED = 'excited';
-    case ANXIOUS = 'anxious';
+
+
     case CONFUSED = 'confused';
-    case GRATEFUL = 'grateful';
-    case HOPEFUL = 'hopeful';
-    case MELANCHOLY = 'melancholy';
+
+
+
 
     /**
      * 表示用のラベル
@@ -28,13 +65,17 @@ enum EmotionState: string
     public function label(): string
     {
         return match ($this) {
-            self::FUN => '楽しい',
+
             self::HAPPY => '嬉しい',
             self::SAD => '悲しい',
-            self::ANGRY => '怒り',
+            self::ANGRY => 'イライラ',
+            self::SURPURISED => '驚いた',
+            self::DISGUSTED => '嫌だった',
+
+            self::FUN => '楽しい',
             self::CALM => '落ち着いている',
             self::NEUTRAL => 'フラット',
-            self::FEAR => '恐れ',
+            self::FEAR => '不安',
             self::EXCITED => '興奮',
             self::ANXIOUS => '不安',
             self::CONFUSED => '混乱',
@@ -68,6 +109,16 @@ enum EmotionState: string
         };
     }
 
+    public function unlockType(): string
+{
+    return match ($this) {
+        self::GRATEFUL => 'base_emotion',    // ベース感情に依存
+        self::MELANCHOLY => 'base_emotion',     // 投稿数に依存
+        self::ANXIOUS => 'base_emotion', // 投稿数に依存
+        default => 'post_count', // その他の感情は投稿数に依存
+    };
+}
+
     public function textColor(): string
     {
         return match ($this) {
@@ -79,7 +130,7 @@ enum EmotionState: string
     public function unlockThreshold(): ?int
     {
         return match ($this) {
-            self::HAPPY, self::SAD, self::ANGRY, self::FEAR => null, // 初期解禁
+            self::HAPPY, self::SAD, self::ANGRY, self::FEAR, self::FUN => null, // 初期解禁
             self::GRATEFUL => 3,
             self::MELANCHOLY => 7,
             default => 30, // その他の感情は30回

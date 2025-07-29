@@ -15,15 +15,20 @@
             ✅ 解禁済み
             @if ($emotion['is_initial'])
                 （初期感情）
+            @elseif ($emotion['unlock_type'] === 'post_count')
+                （投稿数によって解禁）
             @else
                 （{{ $emotion['base'] }} の記録により解禁）
             @endif
         @else
-            🔒 あと {{ $emotion['remaining'] ?? 0}} 回の {{ $emotion['base_emotion'] }} 投稿で解禁（{{ $emotion['current_count'] }} / {{ $emotion['required'] }}）
+            🔒
+            @if ($emotion['unlock_type'] === 'post_count')
+                あと {{ $emotion['remaining'] ?? 0 }} 回の投稿で解禁（{{ $emotion['current_count'] }} / {{ $emotion['required'] }}）
+            @else
+                あと {{ $emotion['remaining'] ?? 0 }} 回の {{ $emotion['base_emotion'] }} 投稿で解禁（{{ $emotion['current_count'] }} / {{ $emotion['required'] }}）
+            @endif
         @endif
     </div>
 @endforeach
-
     </div>
-</div>
 @endsection

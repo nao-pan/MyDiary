@@ -30,7 +30,7 @@
         {{-- 感情ログ（1件のみ） --}}
         @if ($diary->emotionLog)
             <p>
-                <strong>🧠 感情:</strong> {{ $diary->emotionLog->emotion_state }} /
+                <strong>🧠 感情:</strong> {{ $diary->emotionLog->emotion_state->label() }} /
                 <strong>強さ:</strong> {{ number_format($diary->emotionLog->emotion_score, 1) }}
             </p>
         @endif
