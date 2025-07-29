@@ -23,13 +23,14 @@ class DiaryService
                 'user_id' => Auth::id(),
                 'title' => $data['title'],
                 'content' => $data['content'],
+                'hapinness_score' => $data['hapinness_score'] ?? null, // ハピネススコアはオプション?
             ]);
 
             // 感情ログの作成
             EmotionLog::create([
                 'diary_id' => $diary->id,
                 'emotion_state' => $data['emotion_state'],
-                'score' => 1.0, // デフォルトスコア
+                'emotion_score' => $data['emotion_score'],
                 'created_at' => now(),
             ]);
 

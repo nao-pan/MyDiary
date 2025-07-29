@@ -18,7 +18,7 @@ class EmotionLog extends Model
         'created_at' => 'datetime',
     ];
 
-    protected $fillable = ['diary_id', 'emotion_state', 'score'];
+    protected $fillable = ['diary_id', 'emotion_state', 'emotion_score'];
 
     public function diary()
     {

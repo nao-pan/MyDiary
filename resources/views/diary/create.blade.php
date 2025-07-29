@@ -42,6 +42,17 @@
                     @endforeach
                 </div>
             </div>
+            <label for="emotion_score">感情の強さ</label>
+                <select name="emotion_score" id="emotion_score" class="form-select mb-4">
+                    <option value="0.2">とても弱い</option>
+                    <option value="0.4">やや弱い</option>
+                    <option value="0.6">普通</option>
+                    <option value="0.8">やや強い</option>
+                    <option value="1.0">とても強い</option>
+                </select>
+            <label for="happiness_score">今日の幸福度（1〜10）</label>
+                <input type="range" name="happiness_score" id="happiness_score" min="1" max="10" value="5" class="w-full mb-4">
+
 
             <div class="mt-6 text-right">
                 <button type="submit" class="bg-indigo-600 text-white px-4 py-2 rounded hover:bg-indigo-700">保存する</button>

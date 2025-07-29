@@ -17,7 +17,24 @@
     </h1>
 
     <p class="text-gray-500 mb-2">投稿日: {{ $diary->created_at->format('Y年m月d日') }}</p>
+    <p class="text-gray-500 mb-4">作成者: {{ $diary->user->nickname }}</p>
 
+    {{-- 感情ログの表示 --}}
+
+    <div class="mt-4 space-y-2">
+        {{-- 幸福度スコア --}}
+        @if (!is_null($diary->happiness_score))
+            <p><strong>🌟 幸福度スコア:</strong> {{ $diary->happiness_score }}/10</p>
+        @endif
+
+        {{-- 感情ログ（1件のみ） --}}
+        @if ($diary->emotionLog)
+            <p>
+                <strong>🧠 感情:</strong> {{ $diary->emotionLog->emotion_state }} /
+                <strong>強さ:</strong> {{ number_format($diary->emotionLog->emotion_score, 1) }}
+            </p>
+        @endif
+    </div>
 
     <div class="mb-6">
         <p class="whitespace-pre-line">{{ $diary->content }}</p>
