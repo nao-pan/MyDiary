@@ -5,7 +5,7 @@ namespace App\Services;
 use App\Models\EmotionLog;
 use App\Models\User;
 use App\Enums\EmotionState;
-use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Carbon;
 
 class EmotionStatusService
@@ -43,13 +43,17 @@ class EmotionStatusService
       }
 
       return (object)[
-        'emotion' => $emotion,
+        'key' => $emotion->value,
+        'label' => $emotion->label(),
+        'color' => $emotion->color(),
+        'text_color' => $emotion->textColor(),
         'unlocked' => $isUnlocked,
         'threshold' => $threshold,
         'unlockType' => $unlockType,
         'currentCount' => $currentCount,
         'remaining' => $remaining,
-        'baseEmotion' => $baseEmotion,
+        'baseEmotion' => $baseEmotion?->label(),
+        'is_initial' => $emotion->isInitiallyUnlocked(),
       ];
     });
   }
@@ -112,8 +116,9 @@ class EmotionStatusService
   public function getRecentEmotionScores(User $user, int $days = 30): array
   {
     // 最近のEmotionLogを取得
-    $recentLogs = EmotionLog::where('user_id', $user->id)
-      ->where('created_at', '>=', Carbon::now()->subDays($days))
+    $recentLogs = EmotionLog::whereHas('diary', function ($query) use ($user) {
+      $query->where('user_id', $user->id);
+    })->where('created_at', '>=', Carbon::now()->subDays($days))
       ->get();
 
     // ベース感情の一覧を取得
@@ -123,11 +128,11 @@ class EmotionStatusService
       ->unique();
 
     // 各ベース感情のスコアを集計
-    $recentEmotionScores = [];
     foreach ($baseEmotions as $emotion) {
-      $count = $recentLogs->filter(function ($log) use ($emotion) {
-        return EmotionState::from($log->emotion_state)->baseCategory() === $emotion;
-      })->count();
+      $count = $recentLogs->filter(
+        fn($log) =>
+        $log->emotion_state->baseCategory() === $emotion
+      )->count();
 
       $recentEmotionScores[] = $count;
     }
