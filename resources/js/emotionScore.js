@@ -12,6 +12,9 @@
     }
 
     // 初期ハイライト
-    document.addEventListener('DOMContentLoaded', function () {
-        updateEmotionLabel(document.getElementById('emotion_score').value);
-    });
+document.addEventListener('DOMContentLoaded', function () {
+    const scoreInput = document.getElementById('emotion_score');
+    if (scoreInput) {
+        updateEmotionLabel(scoreInput.value);
+    }
+});

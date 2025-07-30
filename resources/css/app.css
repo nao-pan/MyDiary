@@ -1,3 +1,25 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@layer components {
+  .theme-rose body {
+    @apply bg-theme-rose-bg text-theme-rose-text dark:bg-rose-900;
+  }
+  .theme-mist body {
+    @apply bg-theme-mist-bg text-theme-mist-text;
+  }
+  .theme-antique body {
+    @apply bg-theme-antique-bg text-theme-antique-text;
+  }
+
+  .theme-rose .btn-accent {
+    @apply bg-theme-rose-accent text-white;
+  }
+  .theme-mist .btn-accent {
+    @apply bg-theme-mist-accent text-white;
+  }
+  .theme-antique .btn-accent {
+    @apply bg-theme-antique-accent text-white;
+  }
+}
