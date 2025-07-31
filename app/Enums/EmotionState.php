@@ -97,7 +97,7 @@ enum EmotionState: string
             self::REJECTING => '拒否感',
             self::FED_UP_AGAIN => '再びうんざり',
             self::NAUSEATED => '吐き気',
-            
+
             // その他
             self::CALM => '落ち着いている',
             self::NEUTRAL => 'フラット',
@@ -229,5 +229,20 @@ enum EmotionState: string
     public static function values(): array
     {
         return array_map(fn($case) => $case->value, self::cases());
+    }
+
+    /**
+     * ベース感情を返す
+     */
+    public static function baseEmotions(): array
+    {
+        return [
+            self::HAPPY,
+            self::SAD,
+            self::ANGRY,
+            self::FEAR,
+            self::SURPURISED,
+            self::DISGUSTED
+        ];
     }
 }

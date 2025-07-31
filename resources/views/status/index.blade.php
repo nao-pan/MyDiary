@@ -68,8 +68,9 @@
         {{-- グラフ②：月別感情傾向 --}}
         <section class="bg-white/70 backdrop-blur-md shadow-xl rounded-2xl p-4 border border-gray-200">
             <h2 class="text-xl font-semibold mb-3">📅 月別の感情推移</h2>
-            <canvas id="chartMonthly" class="w-full h-48"></canvas>
+            <x-chart.bar-chart :labels="$chartData->labels" :datasets="$chartData->datasets" :options="$chartData->options" id="monthly-status" />
         </section>
+
 
         {{-- グラフ③：直近感情スコア --}}
         <section class="bg-white/70 backdrop-blur-md shadow-xl rounded-2xl p-4 border border-gray-200">
@@ -97,19 +98,6 @@
                 },
                 options: {
                     responsive: true
-                }
-            });
-
-            // グラフ②：月別（例：棒グラフ）
-            new Chart(document.getElementById('chartMonthly'), {
-                type: 'bar',
-                data: {
-                    labels: {!! json_encode($monthlyLabels) !!},
-                    datasets: [{
-                        label: '投稿数',
-                        data: {!! json_encode($monthlyData) !!},
-                        backgroundColor: '#4CAF50'
-                    }]
                 }
             });
 

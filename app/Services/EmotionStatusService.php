@@ -7,6 +7,7 @@ use App\Models\User;
 use App\Enums\EmotionState;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Carbon;
+use App\Dto\Chart\MonthlyEmotionBarChartData;
 
 class EmotionStatusService
 {
@@ -75,37 +76,90 @@ class EmotionStatusService
     return $counts;
   }
 
-  public function getMonthlyLabels(User $user, int $months = 6): array
+  public function getMonthlyChartData(User $user, int $month = 6): MonthlyEmotionBarChartData
   {
-    return $this->getMonthlyEmotionData($user, $months)[0];
+    $labels = $this->generateMonthLabels($month);
+    $emotionCounts = $this->collectEmotionCountsByMonth($user, EmotionState::baseEmotions(), $labels);
+    $datasets = $this->buildEmotionDatasets(EmotionState::baseEmotions(), $emotionCounts, count($labels));
+
+        $options = [
+        'responsive' => true,
+        'scales' => [
+            'x' => ['stacked' => true],
+            'y' => ['stacked' => true],
+        ],
+        'plugins' => [
+            'legend' => ['position' => 'bottom'],
+        ],
+    ];
+
+    return new MonthlyEmotionBarChartData($labels, $datasets, $options);
   }
 
-  public function getMonthlyData(User $user, int $months = 6): array
+  public function getMonthlyEmotionStackedData(User $user, array $labels): array
   {
-    return $this->getMonthlyEmotionData($user, $months)[1];
+    $baseEmotions = [
+      EmotionState::HAPPY,
+      EmotionState::SAD,
+      EmotionState::ANGRY,
+      EmotionState::FEAR,
+      EmotionState::SURPURISED,
+      EmotionState::DISGUSTED,
+    ];
+
+    $emotionCounts = $this->collectEmotionCountsByMonth($user, $baseEmotions, $labels);
+    $datasets = $this->buildEmotionDatasets($baseEmotions, $emotionCounts, count($labels));
+
+    return [$labels, $datasets];
   }
 
-
-  public function getMonthlyEmotionData(User $user, int $months = 6): array
+  public function generateMonthLabels(int $months): array
   {
     $labels = [];
-    $data = [];
-
     for ($i = $months - 1; $i >= 0; $i--) {
-      $month = now()->subMonths($i)->format('Y-m');
-      $labels[] = $month;
-
-      $count = EmotionLog::whereHas('diary', fn($q) => $q->where('user_id', $user->id))
-        ->whereYear('created_at', Carbon::parse($month)->year)
-        ->whereMonth('created_at', Carbon::parse($month)->month)
-        ->count();
-
-      $data[] = $count;
+      $labels[] = Carbon::now()->startOfMonth()->subMonthsNoOverflow($i)->format('Y-m');
     }
 
-    return [$labels, $data];
+    return array_values($labels);
   }
 
+  private function collectEmotionCountsByMonth(User $user, array $baseEmotions, array $labels): array
+  {
+    $emotionCounts = [];
+
+    foreach ($baseEmotions as $base) {
+      $emotionCounts[$base->value] = array_fill_keys($labels, 0); // 月をキーに
+    }
+    foreach ($labels as $month) {
+      [$year, $monthNum] = explode('-', $month);
+
+      $logs = EmotionLog::whereHas('diary', fn($q) => $q->where('user_id', $user->id))
+        ->whereYear('created_at', $year)
+        ->whereMonth('created_at', $monthNum)
+        ->get();
+
+      foreach ($logs as $log) {
+        $emotion = $log->emotion_state;
+        $base = $emotion->baseCategory();
+
+        if ($base && isset($emotionCounts[$base->value][$month])) {
+          $emotionCounts[$base->value][$month]++;
+        }
+      }
+    }
+    return $emotionCounts;
+  }
+
+  private function buildEmotionDatasets(array $baseEmotions, array $emotionCounts, int $labelCount): array
+  {
+    return collect($baseEmotions)->map(function ($emotion) use ($emotionCounts, $labelCount) {
+      return [
+        'label' => $emotion->label(),
+        'data' => array_values($emotionCounts[$emotion->value] ?? array_fill(0, $labelCount, 0)),
+        'backgroundColor' => $emotion->color(),
+      ];
+    })->toArray();
+  }
   /**
    * 直近の感情スコアを取得
    *
