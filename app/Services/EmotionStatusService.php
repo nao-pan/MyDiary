@@ -2,15 +2,20 @@
 
 namespace App\Services;
 
+use App\Dto\Chart\EmotionPieChartData;
 use App\Models\EmotionLog;
 use App\Models\User;
 use App\Enums\EmotionState;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Carbon;
 use App\Dto\Chart\MonthlyEmotionBarChartData;
+use App\Models\EmotionColor;
 
 class EmotionStatusService
 {
+  /**
+   * 感情の解禁状態を返す
+   */
   public function buildEmotionStatuses(User $user, int $postCount): Collection
   {
     $unlokedEmotionStates = $user->unlockedEmotions()
@@ -46,7 +51,7 @@ class EmotionStatusService
       return (object)[
         'key' => $emotion->value,
         'label' => $emotion->label(),
-        'color' => $emotion->color(),
+        'color' => $emotion->defaultColor(),
         'text_color' => $emotion->textColor(),
         'unlocked' => $isUnlocked,
         'threshold' => $threshold,
@@ -59,10 +64,10 @@ class EmotionStatusService
     });
   }
 
-  public function getBaseEmotionChartData(User $user): array
+  public function getBaseEmotionChartData(User $user): EmotionPieChartData
   {
+    $labels = EmotionState::baseEmotions();
     $logs = EmotionLog::whereHas('diary', fn($q) => $q->where('user_id', $user->id))->get();
-
     $counts = [];
     foreach (EmotionState::cases() as $emotion) {
       $base = $emotion->baseCategory();
@@ -72,10 +77,24 @@ class EmotionStatusService
       $counts[$label] ??= 0;
       $counts[$label] += $logs->where('emotion_state', $emotion->value)->count();
     }
+    $labels = array_keys($counts);
+    $data = array_values($counts);
 
-    return $counts;
+    $userColors = EmotionColor::where('user_id', $user->id)
+        ->whereIn('emotion_state', EmotionState::baseEmotions())
+        ->get()
+        ->mapWithKeys(fn($c) => [$c->emotion_state->label() => $c->color_code]);
+    
+    $backgroundColor = array_map(function($label) use ($userColors){
+      $state = EmotionState::fromLabel($label);
+      return $userColors[$label] ?? $state->defaultColor();
+    }, $labels);
+    return new EmotionPieChartData($labels, $data, $backgroundColor);
   }
 
+  /**
+   * 
+   */
   public function getMonthlyChartData(User $user, int $month = 6): MonthlyEmotionBarChartData
   {
     $labels = $this->generateMonthLabels($month);
@@ -156,7 +175,7 @@ class EmotionStatusService
       return [
         'label' => $emotion->label(),
         'data' => array_values($emotionCounts[$emotion->value] ?? array_fill(0, $labelCount, 0)),
-        'backgroundColor' => $emotion->color(),
+        'backgroundColor' => $emotion->defaultColor(),
       ];
     })->toArray();
   }

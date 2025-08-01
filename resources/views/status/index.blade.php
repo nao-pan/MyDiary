@@ -62,13 +62,13 @@
         {{-- グラフ①：感情カテゴリ別 投稿数 --}}
         <section class="bg-white/70 backdrop-blur-md shadow-xl rounded-2xl p-4 border border-gray-200">
             <h2 class="text-xl font-semibold mb-3">📊 感情カテゴリ別の投稿数</h2>
-            <canvas id="chartCategory" class="w-full h-48"></canvas>
+            <x-chart.pie-chart :chartData="$pieChartData" id="chart-pie"/>
         </section>
 
         {{-- グラフ②：月別感情傾向 --}}
         <section class="bg-white/70 backdrop-blur-md shadow-xl rounded-2xl p-4 border border-gray-200">
             <h2 class="text-xl font-semibold mb-3">📅 月別の感情推移</h2>
-            <x-chart.bar-chart :labels="$chartData->labels" :datasets="$chartData->datasets" :options="$chartData->options" id="monthly-status" />
+            <x-chart.bar-chart :labels="$barChartData->labels" :datasets="$barChartData->datasets" :options="$barChartData->options" id="monthly-status" />
         </section>
 
 
@@ -83,23 +83,6 @@
 @push('scripts')
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            // グラフ①：カテゴリ別
-            new Chart(document.getElementById('chartCategory'), {
-                type: 'pie',
-                data: {
-                    labels: {!! json_encode(array_keys($baseEmotionChartData)) !!},
-                    datasets: [{
-                        data: {!! json_encode(array_values($baseEmotionChartData)) !!},
-                        backgroundColor: ['#4CAF50', '#2196F3', '#F44336', '#9C27B0', '#FF9800',
-                            '#795548'
-                        ]
-                    }]
-                },
-                options: {
-                    responsive: true
-                }
-            });
 
             // グラフ③：レーダー（直近投稿から抽出）
             new Chart(document.getElementById('chartRadar'), {

@@ -15,13 +15,14 @@ class StatusController extends Controller
         $user = Auth::user();
         $postCount = $user->diaries()->count();
         $labels = $emotionStatusService->generateMonthLabels(6);
-        $chartData = $emotionStatusService->getMonthlyChartData($user);
+        $barChartData = $emotionStatusService->getMonthlyChartData($user);
+        $pieChartData = $emotionStatusService->getBaseEmotionChartData($user);
 
         return view('status.index', [
-            'baseEmotionChartData' => $emotionStatusService->getBaseEmotionChartData($user),
+            'pieChartData' => $pieChartData,
             'postCount' => $postCount,
             'emotionStatuses' => $emotionStatusService->buildEmotionStatuses($user, $postCount)->sortByDesc('unlocked')->values(),
-            'chartData' => $chartData,
+            'barChartData' => $barChartData,
             'recentEmotionScores' => $emotionStatusService->getRecentEmotionScores($user),
         ]);
     }

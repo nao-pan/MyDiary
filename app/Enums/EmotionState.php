@@ -134,7 +134,7 @@ enum EmotionState: string
     /**
      * 表示用の色
      */
-    public function color(): string
+    public function defaultColor(): string
     {
         return match ($this) {
             self::FUN => '#FFEB3B', // Yellow
@@ -153,6 +153,17 @@ enum EmotionState: string
             default => '#807d7dff', // Black for unknown emotions
         };
     }
+
+
+    public static function fromLabel(string $label): ?self
+{
+    foreach (self::cases() as $case) {
+        if ($case->label() === $label) {
+            return $case;
+        }
+    }
+    return null;
+}
 
     public function unlockType(): string
     {
@@ -232,7 +243,7 @@ enum EmotionState: string
     }
 
     /**
-     * ベース感情を返す
+     * ベース感情配列を返す
      */
     public static function baseEmotions(): array
     {
