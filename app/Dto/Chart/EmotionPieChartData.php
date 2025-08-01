@@ -9,7 +9,9 @@ class EmotionPieChartData
     public array $data,
     public array $backgroundColor = [],
   )
-  {}
+  {
+    logger()->debug('[TRACE] EmotionPieChartData constructor called.', debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 10));
+  }
 
   public function toArray(): array
   {

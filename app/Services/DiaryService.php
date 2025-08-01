@@ -61,13 +61,13 @@ class DiaryService
                 'title' => '',
                 'start' => $date,
                 'display' => 'background',
-                'color' => $customColors[$enum->value] ?? $enum->color(),
+                'color' => $customColors[$enum->value] ?? $enum->defaultColor(),
             ],
             [
                 'title' => Str::limit($log->diary->title ?? '', 12),
                 'start' => $date,
                 'url' => route('diary.show', $log->diary->id),
-                'color' => $customColors[$enum->value] ?? $enum->color(),
+                'color' => $customColors[$enum->value] ?? $enum->defaultColor(),
                 'textColor' => $textColor,
             ]
         ];

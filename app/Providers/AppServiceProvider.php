@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\Str;
 use App\Models\Diary;
 use App\Policies\DiaryPolicy;
+use App\View\Components\Chart\PieChart;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -26,5 +27,6 @@ class AppServiceProvider extends ServiceProvider
         Blade::directive('strlimit', function ($expression) {
             return "<?php echo \Illuminate\Support\Str::limit($expression); ?>";
         });
+        Blade::component('chart.pie-chart', PieChart::class);
     }
 }

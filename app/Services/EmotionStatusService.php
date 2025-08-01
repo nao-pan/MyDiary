@@ -64,7 +64,7 @@ class EmotionStatusService
     });
   }
 
-  public function getBaseEmotionChartData(User $user): EmotionPieChartData
+  public function getEmotionPieChartData(User $user): EmotionPieChartData
   {
     $labels = EmotionState::baseEmotions();
     $logs = EmotionLog::whereHas('diary', fn($q) => $q->where('user_id', $user->id))->get();

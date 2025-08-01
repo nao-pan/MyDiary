@@ -16,7 +16,7 @@ class StatusController extends Controller
         $postCount = $user->diaries()->count();
         $labels = $emotionStatusService->generateMonthLabels(6);
         $barChartData = $emotionStatusService->getMonthlyChartData($user);
-        $pieChartData = $emotionStatusService->getBaseEmotionChartData($user);
+        $pieChartData = $emotionStatusService->getEmotionPieChartData($user);
 
         return view('status.index', [
             'pieChartData' => $pieChartData,

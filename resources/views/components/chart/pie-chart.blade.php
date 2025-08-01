@@ -1,8 +1,3 @@
-@props([
-    'pieChartData',
-    'id' => 'chart-pie',
-])
-
 <canvas id="{{ $id }}"></canvas>
 
 @push('scripts')

@@ -10,7 +10,7 @@
       📝 {{ $diary->title }}
 
     @if ($emotion)
-        <span class="text-sm font-semibold px-2 py-1 rounded" style="background-color: {{ $emotion->color() }}; color: {{ $emotion->textColor()}};">
+        <span class="text-sm font-semibold px-2 py-1 rounded" style="background-color: {{ $emotion->defaultColor() }}; color: {{ $emotion->textColor()}};">
             {{ $emotion->label() }}
         </span>
     @endif

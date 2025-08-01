@@ -40,7 +40,7 @@
                                 <input type="radio" name="emotion_state" value="{{ $emotion->value }}" class="peer hidden"
                                     {{ old('emotion_state') === $emotion->value ? 'checked' : '' }}>
                                 <div class="peer-checked:ring-2 peer-checked:ring-offset-2 peer-checked:ring-indigo-500 rounded px-3 py-1 text-sm"
-                                    style="background-color: {{ $emotion->color() }}; color: {{ $emotion->textColor() }}">
+                                    style="background-color: {{ $emotion->defaultColor() }}; color: {{ $emotion->textColor() }}">
                                     {{ $emotion->label() }}
                                 </div>
                             </label>
