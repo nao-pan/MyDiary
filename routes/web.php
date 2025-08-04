@@ -23,4 +23,9 @@ Route::middleware('auth')->group(function () {
     Route::resource('diary', DiaryController::class);
     Route::resource('status', StatusController::class);
 });
+// テスト用 breeze のルーティング
+Route::get('/dashboard', function () {
+    return redirect()->route('diary.index');
+})->name('dashboard');
+
 require __DIR__.'/auth.php';

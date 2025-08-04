@@ -32,8 +32,16 @@
 				"amiralizadeh9480.laravel-extra-intellisense",
 				"ryannaddy.laravel-artisan",
 				"bmewburn.vscode-intelephense-client",
-				"esbenp.prettier-vscode"
-			]
+				"esbenp.prettier-vscode",
+				"ms-vscode.live-server",
+        "techer.open-in-browser",
+        "peakchen90.open-html-in-browser"
+			],
+			"settings": {
+        "livePreview.autoRefreshPreview": "onSave",
+        "livePreview.server.imagePreview": "browserPreview",
+        "openInBrowser.run.openWithLocalHttpServer": true
+      }
 		}
 	}
 

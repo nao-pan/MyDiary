@@ -19,8 +19,17 @@ class UserFactory extends Factory
     {
         return [
             'name' => $this->faker->name(),
+            'nickname' => $this->faker->name(),
             'email' => $this->faker->unique()->safeEmail(),
+            'email_verified_at' => now(),
             'password' => bcrypt('password'),
         ];
+    }
+
+    public function unverified(): static
+    {
+        return $this->state(fn(array $attributes) => [
+            'email_verified_at' => null,
+        ]);
     }
 }
