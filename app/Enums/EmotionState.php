@@ -171,6 +171,9 @@ enum EmotionState: string
             self::GRATEFUL => 'base_emotion',
             self::MELANCHOLY => 'base_emotion',
             self::ANXIOUS => 'base_emotion',
+            self::DISAPPOINTED => 'base_emotion',
+            self::EXCITED => 'post_count',
+            self::CONFUSED => 'post_count',
             default => 'post_count', // その他の感情は投稿数に依存
         };
     }
@@ -225,6 +228,7 @@ enum EmotionState: string
         return match ($this) {
             self::GRATEFUL => self::HAPPY,
             self::MELANCHOLY => self::SAD,
+            self::DISAPPOINTED => self::SAD,
             default => null,
         };
     }

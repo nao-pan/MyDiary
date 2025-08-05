@@ -15,12 +15,12 @@ use Carbon\Carbon;
 
 class DiaryService
 {
-    public function createWithEmotion(array $data): Diary
+    public function createWithEmotion(User $user, array $data): Diary
     {
-        return DB::transaction(function () use ($data) {
+        return DB::transaction(function () use ($user, $data) {
             // 日記の作成
             $diary = Diary::create([
-                'user_id' => Auth::id(),
+                'user_id' => $user->id,
                 'title' => $data['title'],
                 'content' => $data['content'],
                 'happinness_score' => $data['happinness_score'] ?? null, // ハピネススコアはオプション?

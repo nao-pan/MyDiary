@@ -58,7 +58,7 @@ class DiaryController extends Controller
             'happinness_score' => 'nulalble|integer|min:1|max10', // ハピネススコアのバリデーション
         ]);
 
-        $diary = $this->diaryService->createWithEmotion($validatedData);
+        $diary = $this->diaryService->createWithEmotion(Auth::user(), $validatedData);
         // 感情のアンロックチェック
         $emotionUnlockService = new EmotionUnlockService();
         $emotionUnlockService->checkAndUnlock($diary);

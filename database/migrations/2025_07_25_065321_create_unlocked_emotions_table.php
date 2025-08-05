@@ -17,7 +17,6 @@ return new class extends Migration
             $table->string('emotion_state'); // Enumベース
             $table->foreignId('diary_id')->nullable()->constrained()->onDelete('set null'); // トリガーになった投稿
             $table->timestamp('unlocked_at');
-            $table->timestamps();
         });
     }
 
