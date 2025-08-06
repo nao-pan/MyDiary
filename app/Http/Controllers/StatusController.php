@@ -5,24 +5,22 @@ namespace App\Http\Controllers;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Js;
 use App\Services\EmotionStatusService;
+use App\Services\EmotionChartService;
 
 
 class StatusController extends Controller
 {
-    public function index(EmotionStatusService $emotionStatusService)
+    public function index(EmotionStatusService $emotionStatusService, EmotionChartService $emotionChartService)
     {
         /** @var \App\Models\User $user */
         $user = Auth::user();
         $postCount = $user->diaries()->count();
-        $labels = $emotionStatusService->generateMonthLabels(6);
-        $barChartData = $emotionStatusService->getMonthlyChartData($user);
-        $pieChartData = $emotionStatusService->getEmotionPieChartData($user);
 
         return view('status.index', [
-            'pieChartData' => $pieChartData,
             'postCount' => $postCount,
             'emotionStatuses' => $emotionStatusService->buildEmotionStatuses($user, $postCount)->sortByDesc('unlocked')->values(),
-            'barChartData' => $barChartData,
+            'pieChartData' => $emotionChartService->getEmotionPieChartData($user),
+            'barChartData' => $emotionChartService->getMonthlyChartData($user),
             'recentEmotionScores' => $emotionStatusService->getRecentEmotionScores($user),
         ]);
     }
