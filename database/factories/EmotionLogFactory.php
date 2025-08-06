@@ -4,6 +4,7 @@ namespace Database\Factories;
 
 use App\Enums\EmotionState;
 use App\Models\Diary;
+use App\Models\EmotionLog;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Arr;
 
@@ -12,6 +13,8 @@ use Illuminate\Support\Arr;
  */
 class EmotionLogFactory extends Factory
 {
+    protected $model = EmotionLog::class;
+
     /**
      * Define the model's default state.
      *

@@ -5,12 +5,15 @@ namespace Database\Factories;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use App\Models\EmotionLog;
 use App\Enums\EmotionState;
+use App\Models\Diary;
 
 /**
  * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Diary>
  */
 class DiaryFactory extends Factory
 {
+    protected $model = Diary::class;
+    
     /**
      * Define the model's default state.
      *

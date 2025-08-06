@@ -10,8 +10,6 @@ class Diary extends Model
 {
     use HasFactory;
 
-
-
     /**
      * The attributes that are mass assignable.
      *

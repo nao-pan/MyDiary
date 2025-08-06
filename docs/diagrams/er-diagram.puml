@@ -3,7 +3,7 @@
 entity users {
   *id : int <<PK>>
   --
-  name : string
+  nickname : string
   email : string
   password : string
   created_at : datetime
@@ -17,17 +17,6 @@ entity diaries {
   title : string
   content : text
   emotion_state : string
-  created_at : datetime
-  updated_at : datetime
-}
-
-entity ai_feedbacks {
-  *id : int <<PK>>
-  --
-  diary_id : int <<FK>>
-  summary : text
-  advice : text
-  raw_response : text
   created_at : datetime
   updated_at : datetime
 }
@@ -48,8 +37,17 @@ entity emotion_logs {
   --
   diary_id : int <<FK>>
   emotion_state : string
-  score : float
+  emotion_score : decimal
   created_at : datetime
+}
+
+entity unlocked_emotions {
+  *id : int <<PK>>
+  --
+  user_id : int<<FK>>
+  emotion_state : string
+  diary_id : int<<FK>>
+  unlocked_at : datetime
 }
 
 entity social_accounts {
@@ -66,10 +64,9 @@ entity social_accounts {
 
 ' リレーション定義
 users ||--o{ diaries : ""
-diaries ||--o{ ai_feedbacks : ""
-diaries ||--o{ diary_tag : ""
-tags ||--o{ diary_tag : ""
 diaries ||--o{ emotion_logs : ""
+users ||--o{ emotion_colors : ""
 users ||--o{ social_accounts : ""
+users ||--o{ UnlockedEmotion : ""
 
 @enduml

@@ -145,6 +145,9 @@ class DiaryServiceTest extends TestCase
     }
   }
 
+  /**
+   * カレンダーイベント取得のテスト
+   */
   public function test_get_calendar_events_for_user()
   {
     $user = User::factory()->create();
@@ -158,7 +161,33 @@ class DiaryServiceTest extends TestCase
 
     $events = $this->diaryService->getCalendarEventsForUser($user);
 
-    $this->assertCount(1, $events);
+    $this->assertCount(2, $events);
+    $this->assertEquals($emotionLog->created_at->format('Y-m-d'), $events[0]['start']);
+    $this->assertEquals(EmotionState::HAPPY->defaultColor(), $events[0]['color']);
+  }
+
+    /**
+   * ユーザーがカスタム色を保持している時のカレンダーイベント取得のテスト
+   */
+  public function test_get_calendar_events_when_user_has_custom_color()
+  {
+    $user = User::factory()->create();
+    $diary = Diary::factory()->create(['user_id' => $user->id]);
+    $emotionLog = EmotionLog::factory()->create([
+      'diary_id' => $diary->id,
+      'emotion_state' => EmotionState::HAPPY->value,
+      'emotion_score' => 0.8,
+      'created_at' => now(),
+    ]);
+    $customColor = EmotionColor::factory()->create([
+      'user_id' => $user->id,
+      'emotion_state' => EmotionState::HAPPY->value,
+      'color_code' => '#FFDDDD',
+    ]);
+
+    $events = $this->diaryService->getCalendarEventsForUser($user);
+
+    $this->assertCount(2, $events);
     $this->assertEquals($emotionLog->created_at->format('Y-m-d'), $events[0]['start']);
     $this->assertEquals(EmotionState::HAPPY->defaultColor(), $events[0]['color']);
   }
