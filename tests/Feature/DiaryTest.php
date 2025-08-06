@@ -24,7 +24,7 @@ class DiaryTest extends TestCase
             'content' => 'とても良い1日だった。',
             'emotion_state' => EmotionState::HAPPY->value,
             'emotion_score' => '0.2',
-            'happinness_score' => '1',
+            'happiness_score' => '1',
         ]);
 
         $response->assertRedirect(route('diary.index'));
@@ -33,6 +33,7 @@ class DiaryTest extends TestCase
             'title' => '今日の出来事',
             'content' => 'とても良い1日だった。',
             'user_id' => $user->id,
+            'happiness_score' => 1,
         ]);
 
         // 該当の日記を取得
@@ -42,18 +43,12 @@ class DiaryTest extends TestCase
         $this->assertDatabaseHas('emotion_logs', [
             'diary_id' => $diary->id,
             'emotion_state' => EmotionState::HAPPY->value,
-            'score' => 0.2,
-        ]);
-
-        // 幸福スコアの保存確認
-        $this->assertDatabaseHas('happiness_scores', [
-            'diary_id' => $diary->id,
-            'score' => 1,
+            'emotion_score' => 0.2,
         ]);
     }
 
     /**
-     * 未ログインユーザーは投稿できない
+     * 未ログインユーザーが投稿不可を確認するテスト
      */
     public function test_guest_cannot_create_diary()
     {

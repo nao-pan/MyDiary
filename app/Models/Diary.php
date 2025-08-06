@@ -21,7 +21,7 @@ class Diary extends Model
         'title',
         'content',
         'user_id',
-        'hapinness_score'
+        'happiness_score'
     ];
 
     /**

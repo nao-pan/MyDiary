@@ -23,7 +23,7 @@ class DiaryService
                 'user_id' => $user->id,
                 'title' => $data['title'],
                 'content' => $data['content'],
-                'happinness_score' => $data['happinness_score'] ?? null, // ハピネススコアはオプション?
+                'happiness_score' => $data['happiness_score'] ?? null, // ハピネススコアはオプション?
             ]);
 
             // 感情ログの作成

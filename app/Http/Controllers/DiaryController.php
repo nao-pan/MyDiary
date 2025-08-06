@@ -55,7 +55,7 @@ class DiaryController extends Controller
             'content' => 'required|string',
             'emotion_state' => ['required'], // 感情状態のバリデーション
             'emotion_score' => 'required|numeric|in:0.2,0.4,0.6,0.8,1.0', // 感情スコアのバリデーション
-            'happinness_score' => 'nulalble|integer|min:1|max10', // ハピネススコアのバリデーション
+            'happiness_score' => 'nullable|integer|min:1|max:10', // ハピネススコアのバリデーション
         ]);
 
         $diary = $this->diaryService->createWithEmotion(Auth::user(), $validatedData);

@@ -8,7 +8,8 @@ use App\Http\Controllers\StatusController;
 // 認証前のルーティング
 Route::get('/', function () {
     return redirect()->route('diary.index');// 初期アクセス時は一覧ページへ
-});
+})->middleware('auth');
+
 Route::get('/welcome', function () {
     return view('welcome');
 })->name('welcome');

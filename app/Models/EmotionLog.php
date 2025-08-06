@@ -15,6 +15,7 @@ class EmotionLog extends Model
 
     protected $casts = [
         'emotion_state' => EmotionState::class, // 感情状態を列挙型としてキャスト
+        'emotion_score' => 'decimal:1', // 小数点以下1桁の感情スコア
         'created_at' => 'datetime',
     ];
 
