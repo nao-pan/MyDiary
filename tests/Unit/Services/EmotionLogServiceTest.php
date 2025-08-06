@@ -59,8 +59,7 @@ class EmotionLogServiceTest extends TestCase
     public function test_emotion_log_create_fails_with_invalid_data()
     {
         $this->expectException(\Illuminate\Database\QueryException::class);
-        // $user = User::factory()->create();
-        // $this->actingAs($user);
+
         $this->service->create([
             'diary_id' => null,
             'emotion_state' => 'angry',

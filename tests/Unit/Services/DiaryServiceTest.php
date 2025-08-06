@@ -189,7 +189,7 @@ class DiaryServiceTest extends TestCase
 
     $this->assertCount(2, $events);
     $this->assertEquals($emotionLog->created_at->format('Y-m-d'), $events[0]['start']);
-    $this->assertEquals(EmotionState::HAPPY->defaultColor(), $events[0]['color']);
+    $this->assertEquals($customColor->color_code, $events[0]['color']);
   }
 
   protected function tearDown(): void

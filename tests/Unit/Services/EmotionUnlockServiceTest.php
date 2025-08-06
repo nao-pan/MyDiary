@@ -211,4 +211,24 @@ class EmotionUnlockServiceTest extends TestCase
             'emotion_state' => EmotionState::CONFUSED->value,
         ]);
     }
+
+    /**
+     * 解禁された感情が正しく取得できることを検証するテスト
+     */
+    public function test_get_unlocked_emotions()
+    {
+        $user = User::factory()->create();
+        $this->actingAs($user);
+        $diary = Diary::factory()->create([
+            'user_id' => $user->id,
+        ]);
+        UnlockedEmotion::factory()->create([
+            'user_id' => $user->id,
+            'diary_id' => $diary->id,
+            'emotion_state' => EmotionState::PROUD->value,
+        ]);
+        $unlockedEmotions = $this->service->getUnlockedEmotions();
+        $this->assertContains(EmotionState::PROUD->value, $unlockedEmotions);
+        $this->assertCount(1, $unlockedEmotions);
+    }
 }

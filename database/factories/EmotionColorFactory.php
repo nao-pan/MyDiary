@@ -26,7 +26,7 @@ class EmotionColorFactory extends Factory
         return [
             'user_id' => User::factory(),
             'emotion_state' => Arr::random(EmotionState::cases())->value,
-            'color' => $this->faker->hexColor(),
+            'color_code' => $this->faker->hexColor(),
             'created_at' => $this->faker->dateTimeBetween('-1 year', 'now'),
         ];
     }

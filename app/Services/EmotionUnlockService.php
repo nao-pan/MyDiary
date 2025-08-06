@@ -53,10 +53,6 @@ class EmotionUnlockService
 
                 // 条件2：投稿数のみで解除
             } elseif ($unlockType === 'post_count') {
-                if (is_null($required)) {
-                    continue;
-                }
-
                 $postCount = Diary::where('user_id', $userId)->count();
                 if ($postCount >= $required) {
                     $this->unlock($userId, $emotion, $diary->id);
