@@ -14,11 +14,13 @@ use App\Enums\EmotionState;
 
 class DiaryController extends Controller
 {
-    protected $diaryService;
+    protected DiaryService $diaryService;
+    protected EmotionUnlockService $emotionUnlockService;
 
-    public function __construct(DiaryService $diaryService)
+    public function __construct(DiaryService $diaryService, EmotionUnlockService $emotionUnlockService)
     {
         $this->diaryService = $diaryService;
+        $this->emotionUnlockService = $emotionUnlockService;
         $this->middleware('auth'); // 認証ミドルウェアを適用
     }
 
@@ -60,8 +62,8 @@ class DiaryController extends Controller
 
         $diary = $this->diaryService->createWithEmotion(Auth::user(), $validatedData);
         // 感情のアンロックチェック
-        $emotionUnlockService = new EmotionUnlockService();
-        $emotionUnlockService->checkAndUnlock($diary);
+        $this->emotionUnlockService->checkAndUnlock($diary);
+
         return redirect()->route('diary.index')->with('success', '日記を投稿しました。');
     }
 

@@ -8,6 +8,8 @@ use App\Models\Diary;
 use App\Models\UnlockedEmotion;
 use App\Enums\EmotionState;
 use App\Services\EmotionUnlockService;
+use App\Services\UnlockEvaluator;
+use App\Rules\UnlockRuleRepository;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 
 class EmotionUnlockServiceTest extends TestCase
@@ -19,8 +21,9 @@ class EmotionUnlockServiceTest extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
-
-        $this->service = new EmotionUnlockService();
+        $ruleRepository = new UnlockRuleRepository();
+        $evaluator = new UnlockEvaluator();
+        $this->service = new EmotionUnlockService($evaluator, $ruleRepository);
     }
 
     /**
@@ -40,8 +43,11 @@ class EmotionUnlockServiceTest extends TestCase
             'user_id' => $user->id,
             'emotion_state' => EmotionState::HAPPY->value,
         ]);
-        // どんな感情も解禁されていないことを検証
-        $this->assertCount(0, UnlockedEmotion::where('user_id', $user->id)->get());
+        // 初期解禁感情は登録されないため、GRATEFULも確認
+        $this->assertDatabaseMissing('unlocked_emotions', [
+            'user_id' => $user->id,
+            'emotion_state' => EmotionState::GRATEFUL->value,
+        ]);
     }
 
     /**
@@ -149,25 +155,21 @@ class EmotionUnlockServiceTest extends TestCase
     }
 
     /**
-     * 投稿数が閾値に達していない場合、CONFUSED感情が解禁されないことを検証するテスト
-     * CONFUSED感情は投稿数依存 25回の投稿で解禁される
+     * 投稿数が閾値に達していない場合、HOPEFUL感情が解禁されないことを検証するテスト
+     * HOPEFUL感情は投稿数依存 20回の投稿で解禁される
      */
     public function test_emotion_is_not_unlocked_when_post_count_is_below_threshold()
     {
         $user = User::factory()->create();
-        // 15回のHAPPY感情の投稿
-        Diary::factory()->count(15)->withEmotionLog(EmotionState::HAPPY)->create([
-            'user_id' => $user->id,
-        ]);
-        // 9回のSAD感情の投稿
-        $diary = Diary::factory()->count(9)->withEmotionLog(EmotionState::SAD)->create([
+        // 19回の投稿
+        $diary = Diary::factory()->count(19)->create([
             'user_id' => $user->id,
         ]);
 
         // 初期状態では解禁されていないことを確認
         $this->assertDatabaseMissing('unlocked_emotions', [
             'user_id' => $user->id,
-            'emotion_state' => EmotionState::CONFUSED->value,
+            'emotion_state' => EmotionState::HOPEFUL->value,
         ]);
 
         // 24回の投稿の場合の解禁処理の実行
@@ -176,19 +178,19 @@ class EmotionUnlockServiceTest extends TestCase
         // CONFUSED感情が解禁されていないことを確認
         $this->assertDatabaseMissing('unlocked_emotions', [
             'user_id' => $user->id,
-            'emotion_state' => EmotionState::CONFUSED->value,
+            'emotion_state' => EmotionState::HOPEFUL->value,
         ]);
     }
 
     /**
-     * 投稿数が閾値に達していない場合、CONFUSED感情が解禁されないことを検証するテスト
-     * CONFUSED感情は投稿数依存 25回の投稿で解禁される
+     * 投稿数が閾値に達していない場合、HOPEFUL感情が解禁されないことを検証するテスト
+     * HOPEFUL感情は投稿数依存 25回の投稿で解禁される
      */
     public function test_emotion_is_unlocked_when_posts_reach_threshold()
     {
         $user = User::factory()->create();
-        // 15回のHAPPY感情の投稿
-        Diary::factory()->count(15)->withEmotionLog(EmotionState::HAPPY)->create([
+        // 10回のHAPPY感情の投稿
+        Diary::factory()->count(10)->withEmotionLog(EmotionState::HAPPY)->create([
             'user_id' => $user->id,
         ]);
         // 10回のSAD感情の投稿
@@ -199,7 +201,7 @@ class EmotionUnlockServiceTest extends TestCase
         // 初期状態では解禁されていないことを確認
         $this->assertDatabaseMissing('unlocked_emotions', [
             'user_id' => $user->id,
-            'emotion_state' => EmotionState::CONFUSED->value,
+            'emotion_state' => EmotionState::HOPEFUL->value,
         ]);
 
         // 25回の投稿の場合の解禁処理の実行
@@ -208,7 +210,7 @@ class EmotionUnlockServiceTest extends TestCase
         // CONFUSED感情が解禁されたことを確認
         $this->assertDatabaseHas('unlocked_emotions', [
             'user_id' => $user->id,
-            'emotion_state' => EmotionState::CONFUSED->value,
+            'emotion_state' => EmotionState::HOPEFUL->value,
         ]);
     }
 

@@ -149,7 +149,7 @@
 
   {
     "emotion": "confused",
-    "unlockType": "post_count",
+    "unlockType": "combo",
     "conditions": [
       {
         "type": "post_count",

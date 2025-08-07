@@ -9,53 +9,31 @@ use App\Models\User;
 use App\Models\UnlockedEmotion;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Diary;
+use App\Rules\UnlockRuleRepository;
 
 class EmotionUnlockService
 {
 
+    public function __construct(
+        protected UnlockEvaluator $unlockEvaluator,
+        protected UnlockRuleRepository $unlockRuleRepository
+    ){}
+
     public function checkAndUnlock(Diary $diary): void
     {
-        $userId = $diary->user_id;
+        $user = $diary->user;
 
-        foreach (EmotionState::cases() as $emotion) {
-            // 初期解禁感情はスキップ
-            if ($emotion->isInitiallyUnlocked()) {
-                continue;
+        foreach ($this->unlockRuleRepository->all() as $rule) {
+            if ($rule->isInitial()) {
+                continue; // 初期解禁はスキップ
             }
+            if ($this->unlockEvaluator->isUnlocked($user, $rule)) {
+                $already = $user->unlockedEmotions()
+                    ->where('emotion_state', $rule->emotion->value)
+                    ->exists();
 
-            // すでに解禁済みならスキップ
-            $alreadyUnlocked = UnlockedEmotion::where('user_id', $userId)
-                ->where('emotion_state', $emotion->value)
-                ->exists();
-
-            if ($alreadyUnlocked) {
-                continue;
-            }
-
-            // 解除条件の種別（投稿数ベース or ベース感情ベース）を取得
-            $unlockType = $emotion->unlockType();
-            $required = $emotion->unlockThreshold();
-
-            // 条件1：ベース感情による解除
-            if ($unlockType === 'base_emotion') {
-                $baseEmotion = $emotion->unlockBaseEmotion();
-                if (is_null($baseEmotion) || is_null($required)) {
-                    continue;
-                }
-
-                $count = EmotionLog::whereHas('diary', fn($q) => $q->where('user_id', $userId))
-                    ->where('emotion_state', $baseEmotion->value)
-                    ->count();
-
-                if ($count >= $required) {
-                    $this->unlock($userId, $emotion, $diary->id);
-                }
-
-                // 条件2：投稿数のみで解除
-            } elseif ($unlockType === 'post_count') {
-                $postCount = Diary::where('user_id', $userId)->count();
-                if ($postCount >= $required) {
-                    $this->unlock($userId, $emotion, $diary->id);
+                    if (!$already) {
+                    $this->unlock($user->id, $rule->emotion, $diary->id);
                 }
             }
         }
