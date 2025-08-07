@@ -1,0 +1,32 @@
+{
+  "happy": {
+    "label": "嬉しい系",
+    "emotions": ["happy", "fun", "proud", "grateful", "relieved"],
+    "color": "#4CAF50"
+  },
+  "sad": {
+    "label": "悲しい系",
+    "emotions": ["sad", "disappointed", "lonely", "heartbroken", "melancholy"],
+    "color": "#2196F3"
+  },
+  "angry": {
+    "label": "怒り系",
+    "emotions": ["angry", "irritated", "frustrated", "fed_up"],
+    "color": "#F44336"
+  },
+  "fear": {
+    "label": "不安系",
+    "emotions": ["fear", "nervous", "worried", "anxious"],
+    "color": "#9C27B0"
+  },
+  "surprised": {
+    "label": "驚き系",
+    "emotions": ["surprised", "shaken", "stunned", "excited"],
+    "color": "#FF9800"
+  },
+  "disgusted": {
+    "label": "嫌悪系",
+    "emotions": ["disgusted", "rejecting", "fed_up_again", "nauseated"],
+    "color": "#607D8B"
+  }
+}

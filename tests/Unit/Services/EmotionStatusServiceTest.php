@@ -11,4 +11,11 @@ class EmotionStatusServiceTest extends TestCase
 {
     use RefreshDatabase;
     protected EmotionStatusService $emotionStatusService;
+
+    protected function setUp(): void
+    {
+        parent::setUp();
+        $this->emotionStatusService = new EmotionStatusService();
+    }
+
 }

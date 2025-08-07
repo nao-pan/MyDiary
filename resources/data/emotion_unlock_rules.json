@@ -1,0 +1,166 @@
+[
+  {
+    "emotion": "happy",
+    "unlockType": "initial",
+    "threshold": null
+  },
+  {
+    "emotion": "sad",
+    "unlockType": "initial",
+    "threshold": null
+  },
+  {
+    "emotion": "angry",
+    "unlockType": "initial",
+    "threshold": null
+  },
+  {
+    "emotion": "fear",
+    "unlockType": "initial",
+    "threshold": null
+  },
+  {
+    "emotion": "surprised",
+    "unlockType": "initial",
+    "threshold": null
+  },
+  {
+    "emotion": "disgusted",
+    "unlockType": "initial",
+    "threshold": null
+  },
+
+  {
+    "emotion": "grateful",
+    "unlockType": "base_emotion",
+    "threshold": 20,
+    "baseEmotion": "happy"
+  },
+  {
+    "emotion": "melancholy",
+    "unlockType": "base_emotion",
+    "threshold": 20,
+    "baseEmotion": "sad"
+  },
+  {
+    "emotion": "disappointed",
+    "unlockType": "base_emotion",
+    "threshold": 5,
+    "baseEmotion": "sad"
+  },
+
+  {
+    "emotion": "proud",
+    "unlockType": "post_count",
+    "threshold": 10
+  },
+  {
+    "emotion": "relieved",
+    "unlockType": "post_count",
+    "threshold": 15
+  },
+  {
+    "emotion": "lonely",
+    "unlockType": "post_count",
+    "threshold": 10
+  },
+  {
+    "emotion": "heartbroken",
+    "unlockType": "post_count",
+    "threshold": 15
+  },
+  {
+    "emotion": "irritated",
+    "unlockType": "post_count",
+    "threshold": 5
+  },
+  {
+    "emotion": "frustrated",
+    "unlockType": "post_count",
+    "threshold": 10
+  },
+  {
+    "emotion": "fed_up",
+    "unlockType": "post_count",
+    "threshold": 15
+  },
+  {
+    "emotion": "nervous",
+    "unlockType": "post_count",
+    "threshold": 5
+  },
+  {
+    "emotion": "worried",
+    "unlockType": "post_count",
+    "threshold": 10
+  },
+  {
+    "emotion": "anxious",
+    "unlockType": "base_emotion",
+    "threshold": 15,
+    "baseEmotion": "fear"
+  },
+  {
+    "emotion": "shaken",
+    "unlockType": "post_count",
+    "threshold": 5
+  },
+  {
+    "emotion": "stunned",
+    "unlockType": "post_count",
+    "threshold": 10
+  },
+  {
+    "emotion": "excited",
+    "unlockType": "post_count",
+    "threshold": 15
+  },
+  {
+    "emotion": "rejecting",
+    "unlockType": "post_count",
+    "threshold": 5
+  },
+  {
+    "emotion": "fed_up_again",
+    "unlockType": "post_count",
+    "threshold": 10
+  },
+  {
+    "emotion": "nauseated",
+    "unlockType": "post_count",
+    "threshold": 15
+  },
+
+  {
+    "emotion": "calm",
+    "unlockType": "initial",
+    "threshold": null
+  },
+  {
+    "emotion": "neutral",
+    "unlockType": "initial",
+    "threshold": null
+  },
+  {
+    "emotion": "hopeful",
+    "unlockType": "post_count",
+    "threshold": 20
+  },
+
+  {
+    "emotion": "confused",
+    "unlockType": "post_count",
+    "conditions": [
+      {
+        "type": "post_count",
+        "threshold": 25
+      },
+      {
+        "type": "unlocked_emotions",
+        "emotions": ["anxious", "frustrated"]
+      }
+    ],
+    "isSecret": true,
+    "hint": "不安と怒りが混ざり、ある程度投稿すると現れる"
+  }
+]
