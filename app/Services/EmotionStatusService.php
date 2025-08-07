@@ -7,11 +7,21 @@ use App\Models\User;
 use App\Enums\EmotionState;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Carbon;
-use App\Dto\Chart\MonthlyEmotionBarChartData;
+use App\Rules\UnlockRuleRepository;
+use App\Services\UnlockEvaluator;
 use App\Models\EmotionColor;
 
 class EmotionStatusService
 {
+  protected UnlockRuleRepository $ruleRepository;
+  protected UnlockEvaluator $evaluator;
+
+  public function __construct(UnlockRuleRepository $ruleRepository, UnlockEvaluator $evaluator)
+  {
+    $this->ruleRepository = $ruleRepository;
+    $this->evaluator = $evaluator;
+  }
+
   /**
    * 感情の解禁状態を返す
    */
@@ -20,30 +30,56 @@ class EmotionStatusService
     $unlokedEmotionStates = $user->unlockedEmotions()
       ->pluck('emotion_state')
       ->toArray();
+
     return collect(EmotionState::cases())->map(function ($emotion) use ($user, $unlokedEmotionStates, $postCount) {
-      $isUnlocked = $emotion->isInitiallyUnlocked() || in_array($emotion->value, $unlokedEmotionStates);
-      $threshold = $emotion->unlockThreshold();
-      $unlockType = $emotion->unlockType();
+      $rule = $this->ruleRepository->getByEmotion($emotion);
+
+      $isUnlocked = in_array($emotion->value, $unlokedEmotionStates)
+        || ($rule && $this->evaluator->isUnlocked($user, $rule));
+      $threshold = $rule?->threshold;
+      $unlockType = $rule?->unlockType;
 
       $currentCount = 0;
       $remaining = null;
       $baseEmotion = null;
 
-      if (!$isUnlocked && $threshold !== null) {
-        if ($unlockType === 'post_count') {
-          $currentCount = $postCount;
-          $remaining = max(0, $threshold - $currentCount);
-        } elseif ($unlockType === 'base_emotion') {
-          $baseEmotion = $emotion->unlockBaseEmotion();
+      if (!$isUnlocked && $rule) {
+        switch ($rule->unlockType) {
+          case 'post_count':
+            $currentCount = $postCount;
+            $remaining = max(0, $rule->threshold - $currentCount);
+            break;
 
-          if ($baseEmotion) {
-            $currentCount = $user->diaries()
-              ->whereHas('emotionLog', function ($query) use ($baseEmotion) {
-                $query->where('emotion_state', $baseEmotion->value);
-              })->count();
+          case 'base_emotion':
+            $baseEmotion = $rule->baseEmotion;
+            if ($baseEmotion) {
+              $count = $user->diaries()
+                ->whereHas('emotionLog', fn($q) => $q->where('emotion_state', $baseEmotion->value))
+                ->count();
+              $currentCount = $count;
+              $remaining = max(0, $rule->threshold - $currentCount);
+            }
+            break;
 
-            $remaining = max(0, $threshold - $currentCount);
-          }
+          case 'combo':
+            foreach ($rule->conditions as $condition) {
+              switch ($condition['type']) {
+                case 'post_count':
+                  $currentCount = $postCount;
+                  $remaining = max(0, $condition['threshold'] - $postCount);
+                  break;
+
+                case 'base_emotion':
+                  $baseEmotion = EmotionState::from($condition['baseEmotion']);
+                  $count = $user->diaries()
+                    ->whereHas('emotionLog', fn($q) => $q->where('emotion_state', $baseEmotion->value))
+                    ->count();
+                  $currentCount = $count;
+                  $remaining = max(0, $condition['threshold'] - $count);
+                  break;
+              }
+            }
+            break;
         }
       }
 
@@ -58,7 +94,7 @@ class EmotionStatusService
         'currentCount' => $currentCount,
         'remaining' => $remaining,
         'baseEmotion' => $baseEmotion?->label(),
-        'is_initial' => $emotion->isInitiallyUnlocked(),
+        'is_initial' => $unlockType === 'initial',
       ];
     });
   }
