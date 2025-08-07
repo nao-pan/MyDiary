@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Feature;
+namespace Tests\Unit\Services;
 
 use App\Services\EmotionLogService;
 use App\Models\EmotionLog;
@@ -19,7 +19,6 @@ class EmotionLogServiceTest extends TestCase
     public function setUp(): void
     {
         parent::setUp();
-        // EmotionLogService をモック
         $this->service = new EmotionLogService();
     }
 
@@ -35,7 +34,6 @@ class EmotionLogServiceTest extends TestCase
         ]);
 
         $data = [
-
             'diary_id' => $diary->id,
             'emotion_state' => 'happy',
             'emotion_score' => 0.8,
