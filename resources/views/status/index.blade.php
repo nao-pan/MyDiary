@@ -9,7 +9,7 @@
         {{-- 感情カテゴリ分類 --}}
         @php
             $grouped = collect($emotionStatuses)->groupBy(function ($e) {
-                return $e->is_initial ? '基本感情' : 'アドバンス感情';
+                return $e->isInitial ? '基本感情' : 'アドバンス感情';
             });
         @endphp
 
@@ -22,14 +22,14 @@
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                         @foreach ($emotions as $emotion)
                             <div class="rounded-lg p-4 shadow-sm border border-white/50 bg-white/80 backdrop-blur-sm"
-                                style="background-color: {{ $emotion->color }};">
+                                style="background-color: {{ $emotion->defaultColor }};">
 
                                 <h3 class="text-lg font-bold mb-2">{{ $emotion->label }}</h3>
 
                                 @if ($emotion->unlocked)
                                     <p class="text-sm text-green-800">
                                         ✅ 解禁済み
-                                        @if ($emotion->is_initial)
+                                        @if ($emotion->isInitial)
                                             （初期感情）
                                         @elseif ($emotion->unlockType === 'post_count')
                                             （投稿数によって解禁）
