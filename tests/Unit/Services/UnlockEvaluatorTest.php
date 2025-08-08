@@ -15,7 +15,7 @@ use Tests\TestCase;
 
 class UnlockEvaluatorTest extends TestCase
 {
-     use RefreshDatabase;
+    use RefreshDatabase;
 
     protected UnlockEvaluator $evaluator;
 
@@ -38,6 +38,22 @@ class UnlockEvaluatorTest extends TestCase
         );
 
         $this->assertTrue($this->evaluator->isUnlocked($user, $rule));
+    }
+
+    /**
+     * 初期解禁ではない場合に解禁されないことをテスト
+     */
+    public function test_does_not_unlock_initial_rule_for_non_initial()
+    {
+        $user = User::factory()->create();
+
+        $rule = new EmotionUnlockRule(
+            emotion: EmotionState::CONFUSED,
+            unlockType: 'post_count',
+            threshold: 1
+        );
+
+        $this->assertFalse($this->evaluator->isUnlocked($user, $rule));
     }
 
     /**
@@ -88,7 +104,10 @@ class UnlockEvaluatorTest extends TestCase
         $user = User::factory()->create();
         Diary::factory()->count(4)->create(['user_id' => $user->id]);
         $diary = Diary::factory()->create(['user_id' => $user->id]);
-
+        EmotionLog::factory()->create([
+            'diary_id' => $diary->id,
+            'emotion_state' => EmotionState::HAPPY->value
+        ]);
         $user->unlockedEmotions()->createMany([
             [
                 'diary_id' => $diary->id,
@@ -98,7 +117,8 @@ class UnlockEvaluatorTest extends TestCase
             [
                 'diary_id' => $diary->id,
                 'emotion_state' => EmotionState::RELIEVED->value,
-                'unlocked_at' => now(),],
+                'unlocked_at' => now(),
+            ],
         ]);
 
         $rule = new EmotionUnlockRule(
@@ -107,6 +127,7 @@ class UnlockEvaluatorTest extends TestCase
             conditions: [
                 ['type' => 'post_count', 'threshold' => 5],
                 ['type' => 'unlocked_emotions', 'emotions' => ['fun', 'relieved']],
+                ['type' => 'base_emotion', 'baseEmotion' => EmotionState::HAPPY->value, 'threshold' => 1],
             ]
         );
 

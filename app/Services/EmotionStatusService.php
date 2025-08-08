@@ -10,6 +10,7 @@ use Illuminate\Support\Carbon;
 use App\Rules\UnlockRuleRepository;
 use App\Services\UnlockEvaluator;
 use App\Models\EmotionColor;
+use App\Dto\EmotionStatus;
 
 class EmotionStatusService
 {
@@ -36,67 +37,63 @@ class EmotionStatusService
 
       $isUnlocked = in_array($emotion->value, $unlokedEmotionStates)
         || ($rule && $this->evaluator->isUnlocked($user, $rule));
+      
       $threshold = $rule?->threshold;
       $unlockType = $rule?->unlockType;
 
       $currentCount = 0;
       $remaining = null;
       $baseEmotion = null;
+      [$currentCount, $remaining, $baseEmotion] = (!$isUnlocked && $rule)
+            ? $this->calculateProgress($user, $rule, $postCount)
+            : [0, null, null];
+        //　以下のコードはコンボの条件を取り出すものだが、未実装のためコメントアウト
+      // if (!$isUnlocked && $rule) {
+      //   if ($rule->unlockType === 'combo') {
+      //     $results = $this->comboEvaluator->evaluate($user, $rule->conditions);
+      //     $isUnlocked = collect($results)->every(fn($r) => $r === true);
+      //   }
+      // }
 
-      if (!$isUnlocked && $rule) {
-        switch ($rule->unlockType) {
-          case 'post_count':
-            $currentCount = $postCount;
-            $remaining = max(0, $rule->threshold - $currentCount);
-            break;
-
-          case 'base_emotion':
-            $baseEmotion = $rule->baseEmotion;
-            if ($baseEmotion) {
-              $count = $user->diaries()
-                ->whereHas('emotionLog', fn($q) => $q->where('emotion_state', $baseEmotion->value))
-                ->count();
-              $currentCount = $count;
-              $remaining = max(0, $rule->threshold - $currentCount);
-            }
-            break;
-
-          case 'combo':
-            foreach ($rule->conditions as $condition) {
-              switch ($condition['type']) {
-                case 'post_count':
-                  $currentCount = $postCount;
-                  $remaining = max(0, $condition['threshold'] - $postCount);
-                  break;
-
-                case 'base_emotion':
-                  $baseEmotion = EmotionState::from($condition['baseEmotion']);
-                  $count = $user->diaries()
-                    ->whereHas('emotionLog', fn($q) => $q->where('emotion_state', $baseEmotion->value))
-                    ->count();
-                  $currentCount = $count;
-                  $remaining = max(0, $condition['threshold'] - $count);
-                  break;
-              }
-            }
-            break;
-        }
-      }
-
-      return (object)[
-        'key' => $emotion->value,
-        'label' => $emotion->label(),
-        'color' => $emotion->defaultColor(),
-        'text_color' => $emotion->textColor(),
-        'unlocked' => $isUnlocked,
-        'threshold' => $threshold,
-        'unlockType' => $unlockType,
-        'currentCount' => $currentCount,
-        'remaining' => $remaining,
-        'baseEmotion' => $baseEmotion?->label(),
-        'is_initial' => $unlockType === 'initial',
-      ];
+      return new EmotionStatus(
+        $emotion->value,
+        $emotion->label(),
+        $emotion->defaultColor(),
+        $emotion->textColor(),
+        $isUnlocked,
+        $threshold,
+        $unlockType,
+        $currentCount,
+        $remaining,
+        $baseEmotion?->label(),
+        $unlockType === 'initial',
+      );
     });
+  }
+
+  private function calculateProgress(User $user, object $rule, int $postCount): array
+  {
+    return match ($rule->unlockType) {
+      'post_count' => $this->calculateByPostCount($rule, $postCount),
+      'base_emotion' => $this->calculateByBaseEmotion($user, $rule),
+      default => [0, null, null]
+    };
+  }
+
+  private function calculateByPostCount(object $rule, int $postCount): array
+  {
+    return [$postCount, max(0, $rule->threshold - $postCount), null];
+  }
+
+  private function calculateByBaseEmotion(User $user, object $rule): array
+  {
+    if (!$rule->baseEmotion) {
+      return [0, null, null];
+    }
+    $count = $user->diaries()
+      ->whereHas('emotionLog', fn($q) => $q->where('emotion_state', $rule->baseEmotion->value))
+      ->count();
+    return [$count, max(0, $rule->threshold - $count), $rule->baseEmotion];
   }
 
   /**
@@ -108,6 +105,7 @@ class EmotionStatusService
    */
   public function getRecentEmotionScores(User $user, int $days = 30): array
   {
+    $recentEmotionScores = [];
     // 最近のEmotionLogを取得
     $recentLogs = EmotionLog::whereHas('diary', function ($query) use ($user) {
       $query->where('user_id', $user->id);
