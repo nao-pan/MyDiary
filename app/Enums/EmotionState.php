@@ -165,18 +165,18 @@ enum EmotionState: string
     return null;
 }
 
-    public function unlockType(): string
-    {
-        return match ($this) {
-            self::GRATEFUL => 'base_emotion',
-            self::MELANCHOLY => 'base_emotion',
-            self::ANXIOUS => 'base_emotion',
-            self::DISAPPOINTED => 'base_emotion',
-            self::EXCITED => 'post_count',
-            self::CONFUSED => 'post_count',
-            default => 'post_count', // その他の感情は投稿数に依存
-        };
-    }
+    // public function unlockType(): string
+    // {
+    //     return match ($this) {
+    //         self::GRATEFUL => 'base_emotion',
+    //         self::MELANCHOLY => 'base_emotion',
+    //         self::ANXIOUS => 'base_emotion',
+    //         self::DISAPPOINTED => 'base_emotion',
+    //         self::EXCITED => 'post_count',
+    //         self::CONFUSED => 'post_count',
+    //         default => 'post_count', // その他の感情は投稿数に依存
+    //     };
+    // }
 
     public function textColor(): string
     {

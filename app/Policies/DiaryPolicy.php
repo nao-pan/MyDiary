@@ -8,9 +8,16 @@ use Illuminate\Auth\Access\Response;
 
 class DiaryPolicy
 {
-
     /**
-     * Determine whether the user can view the model.
+     * 一覧表示：所有者のみ閲覧可能
+     */
+    public function viewAny(User $user): bool
+    {
+        return true;
+    }
+    
+    /**
+     * 個別閲覧：所有者のみ閲覧可能
      */
     public function view(User $user, Diary $diary): bool
     {
@@ -18,7 +25,15 @@ class DiaryPolicy
     }
 
     /**
-     * Determine whether the user can update the model.
+     * 作成：ログイン済みユーザはOK
+     */
+    public function create(User $user): bool
+    {
+        return true;
+    }
+
+    /**
+     * 更新：所有者のみ更新可能（更新は未実装）
      */
     public function update(User $user, Diary $diary): bool
     {
@@ -26,26 +41,10 @@ class DiaryPolicy
     }
 
     /**
-     * Determine whether the user can delete the model.
+     * 削除：所有者のみ削除可能（削除は未実装）
      */
-    public function delete(User $user, Diary $diary): bool
-    {
-        return $user->id === $diary->user_id;
-    }
-
-    /**
-     * Determine whether the user can restore the model.
-     */
-    public function restore(User $user, Diary $diary): bool
-    {
-        return $user->id === $diary->user_id;
-    }
-
-    /**
-     * Determine whether the user can permanently delete the model.
-     */
-    public function forceDelete(User $user, Diary $diary): bool
-    {
-        return $user->id === $diary->user_id;
-    }
+    // public function delete(User $user, Diary $diary): bool
+    // {
+    //     return $user->id === $diary->user_id;
+    // }
 }

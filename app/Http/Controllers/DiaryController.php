@@ -22,6 +22,7 @@ class DiaryController extends Controller
         $this->diaryService = $diaryService;
         $this->emotionUnlockService = $emotionUnlockService;
         $this->middleware('auth'); // 認証ミドルウェアを適用
+        $this->authorizeResource(Diary::class, 'diary');
     }
 
 
@@ -70,14 +71,10 @@ class DiaryController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(int $id)
+    public function show(Diary $diary): View
     {
         // 関連データをまとめて取得
-        $diary = Diary::with([
-            'user',
-            'emotionLog'
-        ])->findOrFail($id);
-
+        $diary->load(['emotionLog', 'user']);
         $this->authorize('view', $diary);
 
         // Enum変換などの処理（EmotionState表示用）
@@ -92,24 +89,24 @@ class DiaryController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(Diary $diary)
-    {
-        //
-    }
+    // public function edit(Diary $diary)
+    // {
+    //     //
+    // }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Diary $diary)
-    {
-        //
-    }
+    // public function update(Request $request, Diary $diary)
+    // {
+    //     //
+    // }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Diary $diary)
-    {
-        //
-    }
+    // public function destroy(Diary $diary)
+    // {
+    //     //
+    // }
 }

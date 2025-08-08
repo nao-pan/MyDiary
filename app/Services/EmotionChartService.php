@@ -11,7 +11,9 @@ use App\Models\EmotionColor;
 use Illuminate\Support\Carbon;
 
 
-
+/**
+ * Chart.js用の感情グラフデータを生成するサービスクラス
+ */
 class EmotionChartService
 {
 
@@ -20,24 +22,25 @@ class EmotionChartService
    */
   public function getEmotionPieChartData(User $user): EmotionPieChartData
   {
-    $labels = EmotionState::baseEmotions();
     $logs = EmotionLog::whereHas('diary', fn($q) => $q->where('user_id', $user->id))->get();
-    $counts = [];
-    foreach (EmotionState::cases() as $emotion) {
-      $base = $emotion->baseCategory();
-      if ($base === null) continue;
 
-      $label = $base->label();
-      $counts[$label] ??= 0;
-      $counts[$label] += $logs->where('emotion_state', $emotion->value)->count();
+    $baseEmotions = EmotionState::baseEmotions();
+    $countsByBaseValue = array_fill_keys(array_map(fn($e) => $e->value, $baseEmotions), 0);
+
+    foreach ($logs as $log) {
+      $baseCategory = $log->emotion_state->baseCategory();
+      if ($baseCategory) {
+        $countsByBaseValue[$baseCategory->value]++;
+      }
     }
-    $labels = array_keys($counts);
-    $data = array_values($counts);
-
+    // ユーザーの感情色を取得
     $userColors = EmotionColor::where('user_id', $user->id)
-      ->whereIn('emotion_state', EmotionState::baseEmotions())
+      ->whereIn('emotion_state', array_map(fn($e) => $e->value, $baseEmotions))
       ->get()
       ->mapWithKeys(fn($c) => [$c->emotion_state->label() => $c->color_code]);
+
+    $labels = array_map(fn($e) => $e->label(), $baseEmotions);
+    $data = array_values($countsByBaseValue);
 
     $backgroundColor = array_map(function ($label) use ($userColors) {
       $state = EmotionState::fromLabel($label);
@@ -70,23 +73,9 @@ class EmotionChartService
     return new MonthlyEmotionBarChartData($labels, $datasets, $options);
   }
 
-  public function getMonthlyEmotionStackedData(User $user, array $labels): array
-  {
-    $baseEmotions = [
-      EmotionState::HAPPY,
-      EmotionState::SAD,
-      EmotionState::ANGRY,
-      EmotionState::FEAR,
-      EmotionState::SURPURISED,
-      EmotionState::DISGUSTED,
-    ];
-
-    $emotionCounts = $this->collectEmotionCountsByMonth($user, $baseEmotions, $labels);
-    $datasets = $this->buildEmotionDatasets($baseEmotions, $emotionCounts, count($labels));
-
-    return [$labels, $datasets];
-  }
-
+  /**
+   * 月ラベルを生成するヘルパー
+   */
   private function generateMonthLabels(int $months): array
   {
     $labels = [];
@@ -97,41 +86,54 @@ class EmotionChartService
     return array_values($labels);
   }
 
+  /**
+   * 月ごとの感情別投稿数を取得する
+   */
   private function collectEmotionCountsByMonth(User $user, array $baseEmotions, array $labels): array
   {
-    $emotionCounts = [];
+     // ラベル→年月のセット
+    $labelSet = array_flip($labels);
 
-    foreach ($baseEmotions as $base) {
-      $emotionCounts[$base->value] = array_fill_keys($labels, 0); // 月をキーに
-    }
-    foreach ($labels as $month) {
-      [$year, $monthNum] = explode('-', $month);
+    // 期間全体を一括取得
+    [$start, $end] = [Carbon::createFromFormat('Y-m', $labels[0])->startOfMonth(),
+                      Carbon::createFromFormat('Y-m', end($labels))->endOfMonth()];
 
-      $logs = EmotionLog::whereHas('diary', fn($q) => $q->where('user_id', $user->id))
-        ->whereYear('created_at', $year)
-        ->whereMonth('created_at', $monthNum)
+    $logs = EmotionLog::whereHas('diary', fn($q) => $q->where('user_id', $user->id))
+        ->whereBetween('created_at', [$start, $end])
         ->get();
 
-      foreach ($logs as $log) {
-        $emotion = $log->emotion_state;
-        $base = $emotion->baseCategory();
-
-        if ($base && isset($emotionCounts[$base->value][$month])) {
-          $emotionCounts[$base->value][$month]++;
-        }
-      }
+    // 初期化（base value => [ 'Y-m' => 0, ... ]）
+    $result = [];
+    foreach ($baseEmotions as $base) {
+        $result[$base->value] = array_fill_keys($labels, 0);
     }
-    return $emotionCounts;
+
+    foreach ($logs as $log) {
+        $ym = $log->created_at->format('Y-m');
+        if (!isset($labelSet[$ym])) continue;
+
+        $base = $log->emotion_state->baseCategory();
+        if ($base) {
+            $result[$base->value][$ym]++;
+        }
+    }
+
+    return $result;
   }
 
+  /**
+   * chart.jsのデータセットを構築するヘルパー
+   */
   private function buildEmotionDatasets(array $baseEmotions, array $emotionCounts, int $labelCount): array
   {
-    return collect($baseEmotions)->map(function ($emotion) use ($emotionCounts, $labelCount) {
-      return [
-        'label' => $emotion->label(),
-        'data' => array_values($emotionCounts[$emotion->value] ?? array_fill(0, $labelCount, 0)),
-        'backgroundColor' => $emotion->defaultColor(),
-      ];
-    })->toArray();
+    return array_map(function ($base) use ($emotionCounts, $labelCount) {
+        $series = $emotionCounts[$base->value] ?? array_fill(0, $labelCount, 0);
+
+        return [
+            'label' => $base->label(),
+            'data' => array_values($series),
+            'backgroundColor' => $base->defaultColor(),
+        ];
+    }, $baseEmotions);
   }
 }

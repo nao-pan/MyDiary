@@ -15,7 +15,8 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware): void {
-        //
+        // 未認証ユーザーは必ず /login へ
+        $middleware->redirectGuestsTo(fn (Request $request) => route('login'));
     })
     ->withExceptions(function (Exceptions $exceptions): void {
             $exceptions->render(function (AuthorizationException|AccessDeniedHttpException $e, Request $request) {
@@ -25,7 +26,6 @@ return Application::configure(basePath: dirname(__DIR__))
             ], 403);
         }
 
-        return redirect()->route('diary.index')
-            ->with('error', 'そのページにはアクセスできません');
+        abort(403);
     });
     })->create();
