@@ -12,10 +12,15 @@ class UnlockRuleRepository
 
     public function __construct()
     {
-        $this->rules = collect(json_decode(
-          File::get(resource_path('data/emotion_unlock_rules.json')),
-          true
-        ))->map(function ($data){
+      // JSONファイルからルールを読み込む
+      $json = File::get(resource_path('data/emotion_unlock_rules.json'));
+
+      $decoded = json_decode($json, true);
+
+      if(json_last_error() !== JSON_ERROR_NONE) {
+        throw new \RuntimeException('Invalid JSON in emotion_unlock_rules.json');
+      }
+        $this->rules = collect($decoded)->map(function ($data){
             return new EmotionUnlockRule(
                 EmotionState::from($data['emotion']),
                 $data['unlockType'],

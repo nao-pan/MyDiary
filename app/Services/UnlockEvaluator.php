@@ -20,10 +20,14 @@ class UnlockEvaluator
 
     if ($rule->isBaseEmotion()) {
       $base = $rule->baseEmotion;
-      return $base !== null &&
-        $user->diaries()
+      $threshold = $rule->threshold;
+
+      if ($base === null || !is_numeric($threshold)) {
+        return false;
+      }
+      return $user->diaries()
         ->whereHas('emotionLog', fn($q) => $q->where('emotion_state', $base->value))
-        ->count() >= $rule->threshold;
+        ->count() >= $threshold;
     }
 
     if ($rule->isCombo()) {
