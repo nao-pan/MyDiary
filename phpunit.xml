@@ -16,6 +16,14 @@
         <include>
             <directory>app</directory>
         </include>
+        <exclude>
+            <!-- Laravel Breeze の Auth コントローラを除外 -->
+            <directory>app/Http/Controllers/Auth</directory>
+            <!-- アプリ共通のServiceProvider（テスト不要） -->
+            <file>app/Providers/AppServiceProvider.php</file>
+            <!-- データ加工を行わない単純なViewコンポーネント -->
+            <directory>app/View/Components</directory>
+        </exclude>
     </source>
     <php>
         <env name="APP_ENV" value="testing"/>
