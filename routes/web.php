@@ -4,11 +4,16 @@ use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\DiaryController;
 use App\Http\Controllers\StatusController;
+use App\Http\Controllers\Admin\DashboardController;
 
 // 認証前のルーティング
 Route::get('/', function () {
     return redirect()->route('diary.index');// 初期アクセス時は一覧ページへ
 })->middleware('auth');
+
+Route::prefix('admin')->middleware(['auth', 'admin'])->group(function () {
+    Route::get('/', [DashboardController::class, 'index'])->name('admin.dashboard');
+});
 
 Route::get('/welcome', function () {
     return view('welcome');
@@ -24,6 +29,7 @@ Route::middleware('auth')->group(function () {
     Route::resource('diary', DiaryController::class);
     Route::resource('status', StatusController::class);
 });
+
 // テスト用 breeze のルーティング
 Route::get('/dashboard', function () {
     return redirect()->route('diary.index');

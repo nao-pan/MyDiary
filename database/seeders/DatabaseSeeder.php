@@ -16,9 +16,9 @@ class DatabaseSeeder extends Seeder
         $this->call([
             UserSeeder::class,
             EmotionLogSeeder::class,
-            TagSeeder::class,
-            DiaryTagSeeder::class,
-            SocialAccountSeeder::class,
+            // TagSeeder::class,
+            // DiaryTagSeeder::class,
+            // SocialAccountSeeder::class,
         ]);
     }
 }
