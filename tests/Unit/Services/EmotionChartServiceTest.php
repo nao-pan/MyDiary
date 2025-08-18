@@ -55,7 +55,7 @@ class EmotionChartServiceTest extends TestCase
         $user = User::factory()->create();
         $diary = Diary::factory()->create(['user_id' => $user->id]);
         EmotionLog::factory()->count(10)->create([
-            'diary_id' => $diary->id
+            'diary_id' => $diary->id,
         ]);
 
         $result = $this->emotionChartService->getMonthlyChartData($user, 6);
@@ -67,27 +67,27 @@ class EmotionChartServiceTest extends TestCase
         }
     }
 
-    public function test_collectEmotionCountsByMonth_skips_logs_for_months_not_in_labels(): void
+    public function test_collect_emotion_counts_by_month_skips_logs_for_months_not_in_labels(): void
     {
         // テストの現在日時を固定（任意）
         Carbon::setTestNow('2025-03-15 12:00:00');
 
-        $user  = User::factory()->create();
+        $user = User::factory()->create();
         $diary = Diary::factory()->create(['user_id' => $user->id]);
 
         // 1月/2月/3月のログを作成。2月は「抜け月」として無視させたい
         EmotionLog::factory()->create([
-            'diary_id'   => $diary->id,
+            'diary_id' => $diary->id,
             'created_at' => Carbon::parse('2025-01-10'),
             'emotion_state' => 'happy',
         ]);
         EmotionLog::factory()->create([
-            'diary_id'   => $diary->id,
+            'diary_id' => $diary->id,
             'created_at' => Carbon::parse('2025-02-10'), // ← ここが「continue」で無視される対象
             'emotion_state' => 'happy',
         ]);
         EmotionLog::factory()->create([
-            'diary_id'   => $diary->id,
+            'diary_id' => $diary->id,
             'created_at' => Carbon::parse('2025-03-05'),
             'emotion_state' => 'happy',
         ]);
@@ -103,7 +103,7 @@ class EmotionChartServiceTest extends TestCase
         // もし Enum を使っているなら、そのケースを1つ渡してください。
         // 下はダミー例：['happy'] のような「->value を返すオブジェクト」想定。
         // プロジェクトのEnumに合わせて書き換えてください。
-        $baseEmotions = [ 
+        $baseEmotions = [
             (object) ['value' => 'happy'], // 例: BaseEmotion::happy()->value
         ];
 
@@ -118,7 +118,7 @@ class EmotionChartServiceTest extends TestCase
             $baseEmotions,
             $labels
         );
-        
+
         $this->assertSame(1, $result['happy']['2025-01']);
         $this->assertSame(1, $result['happy']['2025-03']);
         $this->assertArrayNotHasKey('2025-02', $result['happy']);
