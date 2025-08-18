@@ -33,20 +33,6 @@ jobs:
       CACHE_DRIVER: array
       QUEUE_CONNECTION: sync
       SESSION_DRIVER: array
-    services:
-      mysql:
-        image: mysql:8.0
-        env:
-          MYSQL_DATABASE: testing
-          MYSQL_ROOT_PASSWORD: password
-          MYSQL_USER: laravel
-          MYSQL_PASSWORD: password
-        ports: ["3306:3306"]
-        options: >-
-          --health-cmd="mysqladmin ping -ppassword"
-          --health-interval=10s
-          --health-timeout=5s
-          --health-retries=10
 
     steps:
       - uses: actions/checkout@v4
@@ -56,7 +42,7 @@ jobs:
         with:
           php-version: "8.4"
           tools: composer:v2
-          coverage: xdebug
+          coverage: pcov
           extensions: mbstring, intl, pdo_mysql, bcmath, pcntl
 
       - name: Composer install
@@ -80,8 +66,17 @@ jobs:
             ], file_get_contents('.env')));"
             php -r "if (!is_dir('database')) mkdir('database'); touch('database/database.sqlite');"
             php artisan key:generate
+            php artisan config:clear
+      
+      - name: Sanity check (今の接続設定を出力)
+        run: |
+          php -r "echo 'DB_CONNECTION='.(getenv('DB_CONNECTION')?:'').PHP_EOL;"
+          php -r "echo 'DB_DATABASE='.(getenv('DB_DATABASE')?:'').PHP_EOL;"
 
       - name: Migrate
+        env:
+          DB_CONNECTION: sqlite           # ← 念のため強制
+          DB_DATABASE: database/database.sqlite
         run: php artisan migrate --force
 
       - name: Pint (format check)
