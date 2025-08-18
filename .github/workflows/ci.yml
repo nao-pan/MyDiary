@@ -74,10 +74,10 @@ jobs:
         run: php artisan migrate --force
 
       - name: Pint (format check)
-        run: vendor/bin/pint -v --test
+        run: composer lint
 
       - name: PHPStan (static analysis)
-        run: vendor/bin/phpstan analyse --memory-limit=1G
+        run: composer stan
 
       - name: PHPUnit with coverage (100% gate)
         run: |
