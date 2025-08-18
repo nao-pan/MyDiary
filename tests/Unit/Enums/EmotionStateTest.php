@@ -3,8 +3,8 @@
 namespace Tests\Unit\Enums;
 
 use App\Enums\EmotionState;
-use Tests\TestCase;
 use PHPUnit\Framework\Attributes\Test;
+use Tests\TestCase;
 
 class EmotionStateTest extends TestCase
 {

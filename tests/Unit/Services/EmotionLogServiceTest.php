@@ -2,12 +2,11 @@
 
 namespace Tests\Unit\Services;
 
-use App\Services\EmotionLogService;
-use App\Models\EmotionLog;
 use App\Models\Diary;
+use App\Models\EmotionLog;
 use App\Models\User;
+use App\Services\EmotionLogService;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
 
 class EmotionLogServiceTest extends TestCase
@@ -16,10 +15,10 @@ class EmotionLogServiceTest extends TestCase
 
     protected EmotionLogService $service;
 
-    public function setUp(): void
+    protected function setUp(): void
     {
         parent::setUp();
-        $this->service = new EmotionLogService();
+        $this->service = new EmotionLogService;
     }
 
     /**

@@ -20,22 +20,22 @@ class EmotionStatus implements \JsonSerializable
 
     public function toArray(): array
     {
-      return [
-          'key' => $this->key,
-          'label' => $this->label,
-          'color' => $this->defaultColor,// 注：現状デフォルトカラーしか使用しないため
-          'textColor' => $this->textColor,
-          'unlocked' => $this->unlocked,
-          'threshold' => $this->threshold,
-          'unlockType' => $this->unlockType,
-          'currentCount' => $this->currentCount,
-          'remaining' => $this->remaining,
-          'baseEmotion' => $this->baseEmotion,
-          'isInitial' => $this->isInitial,
-      ];
+        return [
+            'key' => $this->key,
+            'label' => $this->label,
+            'color' => $this->defaultColor, // 注：現状デフォルトカラーしか使用しないため
+            'textColor' => $this->textColor,
+            'unlocked' => $this->unlocked,
+            'threshold' => $this->threshold,
+            'unlockType' => $this->unlockType,
+            'currentCount' => $this->currentCount,
+            'remaining' => $this->remaining,
+            'baseEmotion' => $this->baseEmotion,
+            'isInitial' => $this->isInitial,
+        ];
     }
 
-        public function jsonSerialize(): array
+    public function jsonSerialize(): array
     {
         return $this->toArray();
     }

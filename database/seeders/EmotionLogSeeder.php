@@ -3,9 +3,8 @@
 namespace Database\Seeders;
 
 use App\Models\Diary;
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
-use Illuminate\Database\Seeder;
 use App\Models\EmotionLog;
+use Illuminate\Database\Seeder;
 
 class EmotionLogSeeder extends Seeder
 {

@@ -2,15 +2,13 @@
 
 namespace Tests\Unit\Services;
 
-use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Foundation\Testing\WithFaker;
-use App\Services\UnlockEvaluator;
-use App\Models\User;
+use App\Enums\EmotionState;
 use App\Models\Diary;
 use App\Models\EmotionLog;
-use App\Enums\EmotionState;
+use App\Models\User;
 use App\Rules\EmotionUnlockRule;
-use App\Rules\UnlockRule;
+use App\Services\UnlockEvaluator;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
 class UnlockEvaluatorTest extends TestCase
@@ -22,7 +20,7 @@ class UnlockEvaluatorTest extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
-        $this->evaluator = new UnlockEvaluator();
+        $this->evaluator = new UnlockEvaluator;
     }
 
     /**
@@ -83,7 +81,7 @@ class UnlockEvaluatorTest extends TestCase
         $diary = Diary::factory()->create(['user_id' => $user->id]);
         EmotionLog::factory()->create([
             'diary_id' => $diary->id,
-            'emotion_state' => EmotionState::HAPPY->value
+            'emotion_state' => EmotionState::HAPPY->value,
         ]);
 
         $rule = new EmotionUnlockRule(
@@ -106,7 +104,7 @@ class UnlockEvaluatorTest extends TestCase
         $diary = Diary::factory()->create(['user_id' => $user->id]);
         EmotionLog::factory()->create([
             'diary_id' => $diary->id,
-            'emotion_state' => EmotionState::HAPPY->value
+            'emotion_state' => EmotionState::HAPPY->value,
         ]);
         $user->unlockedEmotions()->createMany([
             [
@@ -152,7 +150,7 @@ class UnlockEvaluatorTest extends TestCase
         $this->assertFalse($this->evaluator->isUnlocked($user, $rule));
     }
 
-        /**
+    /**
      * 投稿数ルール: 閾値未満ならfalse
      */
     public function test_does_not_unlock_by_post_count_when_below_threshold()
@@ -382,5 +380,4 @@ class UnlockEvaluatorTest extends TestCase
         );
         $this->assertFalse($this->evaluator->isUnlocked($user, $ruleBelow));
     }
-
 }

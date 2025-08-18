@@ -2,15 +2,15 @@
 
 namespace Tests\Unit\Services;
 
-use Tests\TestCase;
-use App\Models\User;
+use App\Enums\EmotionState;
 use App\Models\Diary;
 use App\Models\UnlockedEmotion;
-use App\Enums\EmotionState;
+use App\Models\User;
+use App\Rules\UnlockRuleRepository;
 use App\Services\EmotionUnlockService;
 use App\Services\UnlockEvaluator;
-use App\Rules\UnlockRuleRepository;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Tests\TestCase;
 
 class EmotionUnlockServiceTest extends TestCase
 {
@@ -21,8 +21,8 @@ class EmotionUnlockServiceTest extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
-        $ruleRepository = new UnlockRuleRepository();
-        $evaluator = new UnlockEvaluator();
+        $ruleRepository = new UnlockRuleRepository;
+        $evaluator = new UnlockEvaluator;
         $this->service = new EmotionUnlockService($evaluator, $ruleRepository);
     }
 
@@ -33,7 +33,7 @@ class EmotionUnlockServiceTest extends TestCase
     {
         $user = User::factory()->create();
         $diary = Diary::factory()->withEmotionLog(EmotionState::HAPPY)->create([
-            'user_id' => $user->id
+            'user_id' => $user->id,
         ]);
 
         $this->service->checkAndUnlock($diary);
@@ -57,7 +57,7 @@ class EmotionUnlockServiceTest extends TestCase
     {
         $user = User::factory()->create();
         $diary = Diary::factory()->withEmotionLog(EmotionState::HAPPY)->create([
-            'user_id' => $user->id
+            'user_id' => $user->id,
         ]);
         UnlockedEmotion::factory()->grateful()->create([
             'user_id' => $user->id,
@@ -90,7 +90,7 @@ class EmotionUnlockServiceTest extends TestCase
     {
         $user = User::factory()->create();
         $diary = Diary::factory()->withEmotionLog(EmotionState::SAD)->create([
-            'user_id' => $user->id
+            'user_id' => $user->id,
         ]);
         $this->service->checkAndUnlock($diary);
         // DISAPPOINTED感情は解禁されていないことを確認

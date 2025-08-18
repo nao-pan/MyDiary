@@ -2,10 +2,10 @@
 
 namespace Database\Factories;
 
-use Illuminate\Database\Eloquent\Factories\Factory;
-use App\Models\EmotionLog;
 use App\Enums\EmotionState;
 use App\Models\Diary;
+use App\Models\EmotionLog;
+use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
  * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Diary>
@@ -13,7 +13,7 @@ use App\Models\Diary;
 class DiaryFactory extends Factory
 {
     protected $model = Diary::class;
-    
+
     /**
      * Define the model's default state.
      *
@@ -22,6 +22,7 @@ class DiaryFactory extends Factory
     public function definition(): array
     {
         $createdAt = $this->faker->dateTimeBetween('-1 year', 'now');
+
         return [
             'title' => $this->faker->sentence(5),
             'content' => $this->faker->paragraph(3),

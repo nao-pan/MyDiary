@@ -2,25 +2,25 @@
 
 namespace App\Rules;
 
-use Illuminate\Support\Facades\File;
 use App\Enums\EmotionState;
+use Illuminate\Support\Facades\File;
 
 class UnlockRuleRepository
 {
-  /** @var UnlockRule[] */
+    /** @var UnlockRule[] */
     protected array $rules;
 
     public function __construct()
     {
-      // JSONファイルからルールを読み込む
-      $json = File::get(resource_path('data/emotion_unlock_rules.json'));
+        // JSONファイルからルールを読み込む
+        $json = File::get(resource_path('data/emotion_unlock_rules.json'));
 
-      $decoded = json_decode($json, true);
+        $decoded = json_decode($json, true);
 
-      if(json_last_error() !== JSON_ERROR_NONE) {
-        throw new \RuntimeException('Invalid JSON in emotion_unlock_rules.json');
-      }
-        $this->rules = collect($decoded)->map(function ($data){
+        if (json_last_error() !== JSON_ERROR_NONE) {
+            throw new \RuntimeException('Invalid JSON in emotion_unlock_rules.json');
+        }
+        $this->rules = collect($decoded)->map(function ($data) {
             return new EmotionUnlockRule(
                 EmotionState::from($data['emotion']),
                 $data['unlockType'],
@@ -35,11 +35,11 @@ class UnlockRuleRepository
 
     public function all(): array
     {
-      return $this->rules;
+        return $this->rules;
     }
 
     public function getByEmotion(EmotionState $emotion): ?EmotionUnlockRule
     {
-      return collect($this->rules)->firstWhere('emotion', $emotion);
+        return collect($this->rules)->firstWhere('emotion', $emotion);
     }
 }

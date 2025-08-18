@@ -2,17 +2,18 @@
 
 namespace Tests\Unit\Models;
 
+use App\Models\Diary;
+use App\Models\Tag;
+use App\Models\User;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
-use App\Models\Tag;
-use App\Models\Diary;
-use App\Models\User;
-use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class TagTest extends TestCase
 {
     use RefreshDatabase, WithFaker;
+
     public function test_can_create_tag()
     {
         $tag = Tag::create(['name' => 'Test Tag']);
@@ -25,10 +26,10 @@ class TagTest extends TestCase
 
     public function test_tag_has_expected_fillable_attributes()
     {
-        $tag = new Tag();
+        $tag = new Tag;
 
         $this->assertEquals([
-            'name'
+            'name',
         ], $tag->getFillable());
     }
 

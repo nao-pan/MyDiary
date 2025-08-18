@@ -2,16 +2,17 @@
 
 namespace App\Console\Commands;
 
-use Illuminate\Console\Command;
+use App\Models\DailyMetric;
 use App\Models\User;
 use App\Models\UserEvent;
-use App\Models\DailyMetric;
 use Carbon\Carbon;
+use Illuminate\Console\Command;
 use Illuminate\Support\Facades\DB;
 
 class BuildDailyMetrics extends Command
 {
     protected $signature = 'metrics:build-daily';
+
     protected $description = '前日分のKPIを集計してdaily_metricsに保存';
 
     public function handle(): int
@@ -74,6 +75,7 @@ class BuildDailyMetrics extends Command
         );
 
         $this->info("Metrics for {$date} saved.");
+
         return self::SUCCESS;
     }
 

@@ -2,11 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Js;
-use App\Services\EmotionStatusService;
 use App\Services\EmotionChartService;
-
+use App\Services\EmotionStatusService;
+use Illuminate\Support\Facades\Auth;
 
 class StatusController extends Controller
 {

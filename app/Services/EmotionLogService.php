@@ -8,9 +8,6 @@ class EmotionLogService
 {
     /**
      * 感情ログを保存する
-     *
-     * @param array $data
-     * @return \App\Models\EmotionLog
      */
     public function create(array $data): EmotionLog
     {

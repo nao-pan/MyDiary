@@ -2,22 +2,18 @@
 
 namespace App\Services;
 
-use App\Models\EmotionLog;
 use App\Enums\EmotionState;
-use Illuminate\Support\Facades\DB;
-use App\Models\User;
-use App\Models\UnlockedEmotion;
-use Illuminate\Support\Facades\Auth;
 use App\Models\Diary;
+use App\Models\UnlockedEmotion;
 use App\Rules\UnlockRuleRepository;
+use Illuminate\Support\Facades\Auth;
 
 class EmotionUnlockService
 {
-
     public function __construct(
         protected UnlockEvaluator $unlockEvaluator,
         protected UnlockRuleRepository $unlockRuleRepository
-    ){}
+    ) {}
 
     public function checkAndUnlock(Diary $diary): void
     {
@@ -32,7 +28,7 @@ class EmotionUnlockService
                     ->where('emotion_state', $rule->emotion->value)
                     ->exists();
 
-                    if (!$already) {
+                if (! $already) {
                     $this->unlock($user->id, $rule->emotion, $diary->id);
                 }
             }
@@ -45,6 +41,7 @@ class EmotionUnlockService
             ->pluck('emotion_state')
             ->toArray();
     }
+
     protected function unlock(int $userId, EmotionState $emotion, int $diaryId): void
     {
         UnlockedEmotion::create([

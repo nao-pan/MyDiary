@@ -9,6 +9,7 @@ use Illuminate\View\Component;
 class Alert extends Component
 {
     public $type; // Type of alert (e.g., success, error, info)
+
     /**
      * Create a new component instance.
      */

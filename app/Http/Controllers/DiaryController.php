@@ -2,19 +2,19 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
+use App\Enums\EmotionState;
 use App\Models\Diary;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Http\RedirectResponse;
-use Illuminate\View\View;
 use App\Services\DiaryService;
 use App\Services\EmotionUnlockService;
-use App\Enums\EmotionState;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\View\View;
 
 class DiaryController extends Controller
 {
     protected DiaryService $diaryService;
+
     protected EmotionUnlockService $emotionUnlockService;
 
     public function __construct(DiaryService $diaryService, EmotionUnlockService $emotionUnlockService)
@@ -24,7 +24,6 @@ class DiaryController extends Controller
         $this->middleware('auth'); // 認証ミドルウェアを適用
         $this->authorizeResource(Diary::class, 'diary');
     }
-
 
     public function index()
     {
@@ -42,9 +41,10 @@ class DiaryController extends Controller
         $unlockedEmotionKeys = $unlockservice->getUnlockedEmotions();
 
         $availableEmotions = array_filter(EmotionState::cases(), function ($state) use ($unlockedEmotionKeys) {
-        return $state->isInitiallyUnlocked() || in_array($state->value, $unlockedEmotionKeys);
-    });
-        return view('diary.create',[
+            return $state->isInitiallyUnlocked() || in_array($state->value, $unlockedEmotionKeys);
+        });
+
+        return view('diary.create', [
             'emotionStates' => $availableEmotions,
         ]);
     }

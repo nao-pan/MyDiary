@@ -2,9 +2,9 @@
 
 namespace Database\Factories;
 
-use Illuminate\Database\Eloquent\Factories\Factory;
-use Carbon\Carbon;
 use App\Models\SocialAccount;
+use Carbon\Carbon;
+use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
  * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\SocialAccount>
@@ -12,6 +12,7 @@ use App\Models\SocialAccount;
 class SocialAccountFactory extends Factory
 {
     protected $model = SocialAccount::class;
+
     /**
      * Define the model's default state.
      *

@@ -35,7 +35,7 @@ class EmotionLogFactory extends Factory
      */
     public function happy(): static
     {
-        return $this->state(fn() => [
+        return $this->state(fn () => [
             'emotion_state' => EmotionState::HAPPY->value,
         ]);
     }

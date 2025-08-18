@@ -3,22 +3,20 @@
 namespace App\Services;
 
 use App\Models\Diary;
-use App\Models\EmotionLog;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\DB;
-use App\Enums\EmotionState;
 use App\Models\EmotionColor;
+use App\Models\EmotionLog;
 use App\Models\User;
-use App\Services\EmotionLogService;
-use Illuminate\Support\Collection;
-use Illuminate\Support\Str;
 use Carbon\Carbon;
+use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Str;
 
 class DiaryService
 {
     public function __construct(
         protected EmotionLogService $emotionLogService
     ) {}
+
     public function createWithEmotion(User $user, array $data): Diary
     {
         return DB::transaction(function () use ($user, $data) {
@@ -49,7 +47,7 @@ class DiaryService
 
         $logs = EmotionLog::with('diary')
             ->whereBetween('created_at', [$startOfMonth, $endOfMonth])
-            ->whereHas('diary', fn($query) => $query->where('user_id', $user->id))
+            ->whereHas('diary', fn ($query) => $query->where('user_id', $user->id))
             ->get();
 
         $customColors = EmotionColor::where('user_id', $user->id)
@@ -73,7 +71,7 @@ class DiaryService
                     'url' => route('diary.show', $log->diary->id),
                     'color' => $customColors[$enum->value] ?? $enum->defaultColor(),
                     'textColor' => $textColor,
-                ]
+                ],
             ];
         })->flatten(1);
     }

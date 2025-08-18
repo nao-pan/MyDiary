@@ -18,13 +18,13 @@
 	// connected. This is typically a file mount in .devcontainer/docker-compose.yml
 	"workspaceFolder": "/var/www/html",
 
-		// Laravel開発によく使うポートを転送
+	// Laravel開発によく使うポートを転送
 	"forwardPorts": [80, 5173, 3306, 8025, 7700],
 
 	// コンテナ作成後に実行するコマンド（Node.jsなどの準備）
 	"postCreateCommand": "composer install && npm install",
 
-	// 任意：エディタ拡張をおすすめで自動インストール
+	// エディタ拡張をインストール
 	"customizations": {
 		"vscode": {
 			"extensions": [

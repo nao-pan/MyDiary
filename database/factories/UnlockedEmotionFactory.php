@@ -2,10 +2,10 @@
 
 namespace Database\Factories;
 
+use App\Enums\EmotionState;
+use App\Models\Diary;
 use App\Models\UnlockedEmotion;
 use App\Models\User;
-use App\Models\Diary;
-use App\Enums\EmotionState;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Arr;
 
@@ -36,7 +36,7 @@ class UnlockedEmotionFactory extends Factory
      */
     public function grateful(): static
     {
-        return $this->state(fn() => [
+        return $this->state(fn () => [
             'emotion_state' => EmotionState::GRATEFUL->value,
         ]);
     }

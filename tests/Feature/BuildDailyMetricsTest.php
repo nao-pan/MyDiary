@@ -2,12 +2,12 @@
 
 namespace Tests\Feature;
 
-use Tests\TestCase;
+use App\Models\DailyMetric;
 use App\Models\User;
 use App\Models\UserEvent;
-use App\Models\DailyMetric;
-use Illuminate\Support\Carbon;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Carbon;
+use Tests\TestCase;
 
 class BuildDailyMetricsTest extends TestCase
 {
@@ -17,6 +17,7 @@ class BuildDailyMetricsTest extends TestCase
     {
         $yesterday = now()->subDay()->toDateString();
         $this->artisan('metrics:build-daily')->assertExitCode(0);
+
         return DailyMetric::where('date', $yesterday)->first();
     }
 
@@ -70,9 +71,9 @@ class BuildDailyMetricsTest extends TestCase
         // 「昨日～3日前」の3回投稿（= 集計ウィンドウ [昨日-6日, 昨日] に完全に入る）
         foreach ([1, 2, 3] as $d) {
             UserEvent::create([
-                'user_id'    => $user->id,
-                'type'       => 'diary_posted',
-                'meta'       => ['emotionstate' => 'HAPPY', 'diary_id' => 100 + $d],
+                'user_id' => $user->id,
+                'type' => 'diary_posted',
+                'meta' => ['emotionstate' => 'HAPPY', 'diary_id' => 100 + $d],
                 'occurred_at' => now()->subDays($d)->setTime(12, 0),
             ]);
         }

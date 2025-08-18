@@ -2,12 +2,12 @@
 
 namespace Tests\Unit\Models;
 
-use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Foundation\Testing\WithFaker;
-use Tests\TestCase;
 use App\Models\SocialAccount;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Foundation\Testing\WithFaker;
+use Tests\TestCase;
 
 class SocialAccountTest extends TestCase
 {
@@ -34,14 +34,14 @@ class SocialAccountTest extends TestCase
 
     public function test_social_account_has_expected_fillable_attributes()
     {
-        $socialAccount = new SocialAccount();
+        $socialAccount = new SocialAccount;
 
         $this->assertEquals([
             'user_id',
             'provider_name',
             'provider_id',
             'avatar',
-            'email'
+            'email',
         ], $socialAccount->getFillable());
     }
 

@@ -4,7 +4,6 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Testing\Fluent\Concerns\Has;
 
 class DailyMetric extends Model
 {
@@ -18,6 +17,6 @@ class DailyMetric extends Model
         'd7_retention',
         'wau',
         'mau',
-        'weekly_3plus_ratio'
+        'weekly_3plus_ratio',
     ];
 }

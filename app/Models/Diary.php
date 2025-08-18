@@ -2,9 +2,8 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-
+use Illuminate\Database\Eloquent\Model;
 
 class Diary extends Model
 {
@@ -19,7 +18,7 @@ class Diary extends Model
         'title',
         'content',
         'user_id',
-        'happiness_score'
+        'happiness_score',
     ];
 
     /**
@@ -39,5 +38,4 @@ class Diary extends Model
     {
         return $this->belongsToMany(Tag::class, 'diary_tag');
     }
-    
 }

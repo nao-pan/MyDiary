@@ -1,0 +1,23 @@
+includes:
+  - vendor/nunomaduro/larastan/extension.neon
+  - phpstan-baseline.neon
+
+parameters:
+  paths:
+    - app
+    - database/factories
+    - database/seeders
+
+  level: 6
+
+  # よく使うオプション
+  checkModelProperties: true
+
+  excludePaths:
+    - tests/*
+    - bootstrap/*
+    - storage/*
+    - vendor/*
+
+  ignoreErrors:
+    - '#Access to an undefined property App\\Models\\.+::\$[a-zA-Z_]+#'

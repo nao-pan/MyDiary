@@ -1,0 +1,97 @@
+name: CI
+
+on:
+  push:
+    branches:
+      - main
+      - develop
+      - feature/*
+      - hotfix/*
+      - bugfix/*
+      - release/*
+    paths-ignore:
+      - "**/*.md"
+      - "docs/**"
+  pull_request:
+    branches:
+      - main
+      - develop
+    paths-ignore:
+      - "**/*.md"
+      - "docs/**"
+
+concurrency:
+  group: ci-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    env:
+      APP_ENV: testing
+      APP_KEY: base64:0000000000000000000000000000000000000000000=
+      CACHE_DRIVER: array
+      QUEUE_CONNECTION: sync
+      SESSION_DRIVER: array
+    services:
+      mysql:
+        image: mysql:8.0
+        env:
+          MYSQL_DATABASE: testing
+          MYSQL_ROOT_PASSWORD: password
+          MYSQL_USER: laravel
+          MYSQL_PASSWORD: password
+        ports: ["3306:3306"]
+        options: >-
+          --health-cmd="mysqladmin ping -ppassword"
+          --health-interval=10s
+          --health-timeout=5s
+          --health-retries=10
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: "8.4"
+          tools: composer:v2
+          coverage: xdebug
+          extensions: mbstring, intl, pdo_mysql, bcmath, pcntl
+
+      - name: Composer install
+        run: |
+          composer install --no-interaction --prefer-dist --no-progress
+          cp .env.example .env
+          php -r "file_put_contents('.env', str_replace(
+            ['DB_CONNECTION=mysql','DB_HOST=127.0.0.1','DB_PORT=3306','DB_DATABASE=laravel','DB_USERNAME=root','DB_PASSWORD='],
+            ['DB_CONNECTION=mysql','DB_HOST=127.0.0.1','DB_PORT=3306','DB_DATABASE=testing','DB_USERNAME=laravel','DB_PASSWORD=password'],
+                        file_get_contents('.env')
+          ));"
+          php artisan key:generate
+
+      - name: Migrate
+        run: php artisan migrate --force
+
+      - name: Pint (format check)
+        run: vendor/bin/pint -v --test
+
+      - name: PHPStan (static analysis)
+        run: vendor/bin/phpstan analyse --memory-limit=1G
+
+      - name: PHPUnit with coverage (100% gate)
+        run: |
+          vendor/bin/phpunit --coverage-clover coverage.xml
+          php -r '
+            $xml = simplexml_load_file("coverage.xml");
+            $m = $xml->project->metrics;
+            $pct = ((int)$m["statements"]) ? ((int)$m["coveredstatements"]/(int)$m["statements"]*100) : 0;
+            echo "Coverage: ".round($pct,2)." %\n";
+            if ($pct < 100) { fwrite(STDERR, "Coverage must be 100%.\n"); exit(1); }
+          '
+
+      - name: Upload coverage artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: coverage-${{ github.run_id }}
+          path: coverage.xml

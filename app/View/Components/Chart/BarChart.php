@@ -5,7 +5,6 @@ namespace App\View\Components\Chart;
 use Closure;
 use Illuminate\Contracts\View\View;
 use Illuminate\View\Component;
-use Illuminate\Support\Js;
 
 class BarChart extends Component
 {

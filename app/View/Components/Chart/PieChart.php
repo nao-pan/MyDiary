@@ -2,10 +2,10 @@
 
 namespace App\View\Components\Chart;
 
+use App\Dto\Chart\EmotionPieChartData;
 use Closure;
 use Illuminate\Contracts\View\View;
 use Illuminate\View\Component;
-use App\Dto\Chart\EmotionPieChartData;
 
 class PieChart extends Component
 {
@@ -15,8 +15,7 @@ class PieChart extends Component
     public function __construct(
         public EmotionPieChartData $pieChartData,
         public string $id = 'chart-pie',
-    )
-    {
+    ) {
         //
     }
 

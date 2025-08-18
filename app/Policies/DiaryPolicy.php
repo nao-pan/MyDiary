@@ -4,7 +4,6 @@ namespace App\Policies;
 
 use App\Models\Diary;
 use App\Models\User;
-use Illuminate\Auth\Access\Response;
 
 class DiaryPolicy
 {
@@ -15,7 +14,7 @@ class DiaryPolicy
     {
         return true;
     }
-    
+
     /**
      * 個別閲覧：所有者のみ閲覧可能
      */

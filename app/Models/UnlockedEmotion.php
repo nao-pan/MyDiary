@@ -2,9 +2,8 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Testing\Fluent\Concerns\Has;
+use Illuminate\Database\Eloquent\Model;
 
 class UnlockedEmotion extends Model
 {
@@ -16,7 +15,7 @@ class UnlockedEmotion extends Model
         'user_id',
         'emotion_state',
         'diary_id',
-        'unlocked_at'
+        'unlocked_at',
     ];
 
     public function diary()

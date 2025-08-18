@@ -5,9 +5,8 @@ namespace Database\Factories;
 use App\Enums\EmotionState;
 use App\Models\EmotionColor;
 use App\Models\User;
-use Illuminate\Support\Arr;
-
 use Illuminate\Database\Eloquent\Factories\Factory;
+use Illuminate\Support\Arr;
 
 /**
  * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\EmotionColor>
@@ -15,7 +14,7 @@ use Illuminate\Database\Eloquent\Factories\Factory;
 class EmotionColorFactory extends Factory
 {
     protected $model = EmotionColor::class;
-    
+
     /**
      * Define the model's default state.
      *

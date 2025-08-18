@@ -3,11 +3,11 @@
 namespace Tests\Feature;
 
 use App\Enums\EmotionState;
-use Tests\TestCase;
-use App\Models\User;
 use App\Models\Diary;
 use App\Models\EmotionLog;
+use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Tests\TestCase;
 
 class DiaryTest extends TestCase
 {

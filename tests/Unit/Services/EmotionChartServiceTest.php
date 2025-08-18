@@ -2,17 +2,15 @@
 
 namespace Tests\Unit\Services;
 
+use App\Dto\Chart\EmotionPieChartData;
+use App\Dto\Chart\MonthlyEmotionBarChartData;
+use App\Models\Diary;
+use App\Models\EmotionLog;
+use App\Models\User;
+use App\Services\EmotionChartService;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
-use App\Dto\Chart\EmotionPieChartData;
-use App\Dto\Chart\MonthlyEmotionBarChartData;
-use App\Models\EmotionLog;
-use App\Models\User;
-use App\Enums\EmotionState;
-use App\Models\EmotionColor;
-use App\Models\Diary;
-use App\Services\EmotionChartService;
 
 class EmotionChartServiceTest extends TestCase
 {
@@ -35,7 +33,7 @@ class EmotionChartServiceTest extends TestCase
         $result = $this->emotionChartService->getEmotionPieChartData($user);
 
         $this->assertInstanceOf(EmotionPieChartData::class, $result);
-        $this->assertEquals(array_sum($result->data), 0) ;
+        $this->assertEquals(array_sum($result->data), 0);
     }
 
     public function test_get_emotion_chart_data()
@@ -51,7 +49,7 @@ class EmotionChartServiceTest extends TestCase
         $this->assertEquals(array_sum($result->data), 5);
     }
 
-    public function testGetMonthlyChartData()
+    public function test_get_monthly_chart_data()
     {
         $user = User::factory()->create();
         $diary = Diary::factory()->create(['user_id' => $user->id]);

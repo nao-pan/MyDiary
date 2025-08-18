@@ -2,10 +2,8 @@
 
 namespace Tests\Unit\Dto;
 
-use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Foundation\Testing\WithFaker;
-use Tests\TestCase;
 use App\Dto\Chart\MonthlyEmotionBarChartData;
+use Tests\TestCase;
 
 class MonthlyEmotionBarChartDataTest extends TestCase
 {
@@ -18,7 +16,7 @@ class MonthlyEmotionBarChartDataTest extends TestCase
             ['January', 'February'],
             [
                 ['label' => 'Happy', 'data' => [10, 20], 'backgroundColor' => '#FF0000'],
-                ['label' => 'Sad', 'data' => [5, 15], 'backgroundColor' => '#0000FF']
+                ['label' => 'Sad', 'data' => [5, 15], 'backgroundColor' => '#0000FF'],
             ],
             ['responsive' => true]
         );
@@ -29,21 +27,21 @@ class MonthlyEmotionBarChartDataTest extends TestCase
         $this->assertEquals(['responsive' => true], $dto->options);
     }
 
-    public function test_toArray()
+    public function test_to_array()
     {
         $dto = new MonthlyEmotionBarChartData(
             ['March', 'April'],
             [
-                ['label' => 'Angry', 'data' => [30, 40], 'backgroundColor' => '#00FF00']
+                ['label' => 'Angry', 'data' => [30, 40], 'backgroundColor' => '#00FF00'],
             ]
         );
 
         $expectedArray = [
             'labels' => ['March', 'April'],
             'datasets' => [
-                ['label' => 'Angry', 'data' => [30, 40], 'backgroundColor' => '#00FF00']
+                ['label' => 'Angry', 'data' => [30, 40], 'backgroundColor' => '#00FF00'],
             ],
-            'options' => []
+            'options' => [],
         ];
 
         $this->assertEquals($expectedArray, $dto->toArray());

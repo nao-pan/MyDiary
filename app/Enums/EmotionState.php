@@ -12,52 +12,45 @@ enum EmotionState: string
     case SURPURISED = 'surprised';
     case DISGUSTED = 'disgusted';
 
-        // Happy系統
+    // Happy系統
     case FUN = 'fun';
     case PROUD = 'proud';
     case GRATEFUL = 'grateful';
     case RELIEVED = 'relieved';
 
-        // Sad系統
+    // Sad系統
     case DISAPPOINTED = 'disappointed';
     case LONELY = 'lonely';
     case HEARTBROKEN = 'heartbroken';
     case MELANCHOLY = 'melancholy';
 
-        // angry系統
+    // angry系統
     case IRRITATED = 'irritated';
     case FRUSTRATED = 'frustrated';
     case FED_UP = 'fed_up';
 
-        // fear系統
+    // fear系統
     case NERVOUS = 'nervous';
     case WORRIED = 'worried';
     case ANXIOUS = 'anxious';
 
-        // surprised系統
+    // surprised系統
     case SHAKEN = 'shaken';
     case STUNNED = 'stunned';
     case EXCITED = 'excited';
 
-        // disgust系統
+    // disgust系統
     case REJECTING = 'rejecting';
     case FED_UP_AGAIN = 'fed_up_again';
     case NAUSEATED = 'nauseated';
-
 
     case CALM = 'calm';
     case NEUTRAL = 'neutral';
     case HOPEFUL = 'hopeful';
 
-
-
-        // アドバンス感情
-
+    // アドバンス感情
 
     case CONFUSED = 'confused';
-
-
-
 
     /**
      * 表示用のラベル
@@ -154,16 +147,16 @@ enum EmotionState: string
         };
     }
 
-
     public static function fromLabel(string $label): ?self
-{
-    foreach (self::cases() as $case) {
-        if ($case->label() === $label) {
-            return $case;
+    {
+        foreach (self::cases() as $case) {
+            if ($case->label() === $label) {
+                return $case;
+            }
         }
+
+        return null;
     }
-    return null;
-}
 
     // public function unlockType(): string
     // {
@@ -243,7 +236,7 @@ enum EmotionState: string
      */
     public static function values(): array
     {
-        return array_map(fn($case) => $case->value, self::cases());
+        return array_map(fn ($case) => $case->value, self::cases());
     }
 
     /**
@@ -257,7 +250,7 @@ enum EmotionState: string
             self::ANGRY,
             self::FEAR,
             self::SURPURISED,
-            self::DISGUSTED
+            self::DISGUSTED,
         ];
     }
 }

@@ -1,0 +1,80 @@
+name: Deploy(parked)
+
+on:
+  # push:
+  #   branches:
+  #     - develop
+  #     - main
+  workflow_dispatch: {}
+
+concurrency:
+  group: deploy-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    if: ${{ vars.ENABLE_DEPLOY == 'true' }}
+
+    # if: github.ref_name == 'develop' || github.ref_name == 'main'
+    # environment:
+    #   name: ${{ github.ref_name == 'main' && 'production' || 'staging' }}
+    #   url: ${{ steps.deployurl.outputs.url }}
+
+    steps:
+      - uses: actions/checkout@v4
+
+      # - name: Set deploy path per env
+      #   id: path
+      #   run: |
+      #     if [ "${{ github.ref_name }}" = "main" ]; then
+      #       echo "path=${{ secrets.DEPLOY_PATH }}/current" >> $GITHUB_OUTPUT
+      #     else
+      #       echo "path=${{ secrets.DEPLOY_PATH }}/staging" >> $GITHUB_OUTPUT
+      #     fi
+
+      # - name: RSYNC source via SCP
+      #   uses: appleboy/scp-action@v0.1.7
+      #   with:
+      #     host: ${{ secrets.SSH_HOST }}
+      #     username: ${{ secrets.SSH_USER }}
+      #     key: ${{ secrets.SSH_KEY }}
+      #     port: ${{ secrets.SSH_PORT }}
+      #     source: "."
+      #     target: "${{ steps.path.outputs.path }}"
+      #     rm: true
+      #     exclude: |
+      #       .git
+      #       node_modules
+      #       vendor
+      #       storage/logs/*
+      #       tests
+      #       .github
+
+      # - name: Remote install & migrate
+      #   uses: appleboy/ssh-action@v1.2.0
+      #   with:
+      #     host: ${{ secrets.SSH_HOST }}
+      #     username: ${{ secrets.SSH_USER }}
+      #     key: ${{ secrets.SSH_KEY }}
+      #     port: ${{ secrets.SSH_PORT }}
+      #     script: |
+      #       set -eux
+      #       cd "${{ steps.path.outputs.path }}"
+      #       php -v
+      #       composer install --no-dev --prefer-dist --no-interaction --optimize-autoloader
+      #       php artisan key:generate --force || true
+      #       php artisan storage:link || true
+      #       php artisan migrate --force
+      #       php artisan config:cache
+      #       php artisan route:cache
+      #       php artisan view:cache
+
+      # - name: Output URL
+      #   id: deployurl
+      #   run: |
+      #     if [ "${{ github.ref_name }}" = "main" ]; then
+      #       echo "url=https://your-production-domain.example" >> $GITHUB_OUTPUT
+      #     else
+      #       echo "url=https://your-staging-domain.example" >> $GITHUB_OUTPUT
+      #     fi

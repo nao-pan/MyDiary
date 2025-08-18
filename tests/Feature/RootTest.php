@@ -7,7 +7,6 @@ use Tests\TestCase;
 
 class RootTest extends TestCase
 {
-
     public function test_root_redirects_to_login(): void
     {
         $response = $this->get('/');

@@ -2,10 +2,8 @@
 
 namespace Tests\Unit\Dto;
 
-use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Foundation\Testing\WithFaker;
-use Tests\TestCase;
 use App\Dto\Chart\EmotionPieChartData;
+use Tests\TestCase;
 
 class EmotionPieChartDataTest extends TestCase
 {

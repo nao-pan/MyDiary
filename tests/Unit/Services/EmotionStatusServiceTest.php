@@ -2,20 +2,18 @@
 
 namespace Tests\Unit\Services;
 
-use App\Dto\EmotionStatus;
-use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Foundation\Testing\WithFaker;
-use Illuminate\Support\Collection;
-use Illuminate\Support\Carbon;
-use Mockery;
-use App\Services\EmotionStatusService;
-use App\Services\UnlockEvaluator;
-use App\Rules\UnlockRuleRepository;
-use App\Models\User;
 use App\Enums\EmotionState;
 use App\Models\Diary;
 use App\Models\EmotionLog;
+use App\Models\User;
 use App\Rules\EmotionUnlockRule;
+use App\Rules\UnlockRuleRepository;
+use App\Services\EmotionStatusService;
+use App\Services\UnlockEvaluator;
+use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Carbon;
+use Illuminate\Support\Collection;
+use Mockery;
 use Tests\TestCase;
 
 class EmotionStatusServiceTest extends TestCase
@@ -23,7 +21,9 @@ class EmotionStatusServiceTest extends TestCase
     use RefreshDatabase;
 
     protected $ruleRepository;
+
     protected $evaluator;
+
     protected EmotionStatusService $service;
 
     protected function setUp(): void
@@ -139,7 +139,7 @@ class EmotionStatusServiceTest extends TestCase
 
         $this->ruleRepository
             ->shouldReceive('getByEmotion')
-            ->andReturnUsing(fn($e) => $e === $emotion ? $rule : null);
+            ->andReturnUsing(fn ($e) => $e === $emotion ? $rule : null);
 
         // まだ未解禁の想定なので false を返す
         $this->evaluator
@@ -169,7 +169,7 @@ class EmotionStatusServiceTest extends TestCase
 
         $this->ruleRepository
             ->shouldReceive('getByEmotion')
-            ->andReturnUsing(fn($e) => $e === $emotion ? $rule : null);
+            ->andReturnUsing(fn ($e) => $e === $emotion ? $rule : null);
 
         $this->evaluator
             ->shouldReceive('isUnlocked')
@@ -179,7 +179,7 @@ class EmotionStatusServiceTest extends TestCase
         $dto = $statuses->firstWhere('key', $emotion->value);
 
         $this->assertSame(10, $dto->currentCount);
-        $this->assertSame(0,  $dto->remaining);
+        $this->assertSame(0, $dto->remaining);
     }
 
     /**
@@ -199,7 +199,7 @@ class EmotionStatusServiceTest extends TestCase
 
         $this->ruleRepository
             ->shouldReceive('getByEmotion')
-            ->andReturnUsing(fn($e) => $e === $emotion ? $rule : null);
+            ->andReturnUsing(fn ($e) => $e === $emotion ? $rule : null);
 
         $this->evaluator
             ->shouldReceive('isUnlocked')
@@ -216,7 +216,6 @@ class EmotionStatusServiceTest extends TestCase
         $this->assertSame('base_emotion', $dto->unlockType);
         $this->assertSame(3, $dto->threshold);
     }
-
 
     /**
      * ベース感情の条件タイプで、投稿数が閾値以上でも感情タイプでの投稿数が足りない場合に、
@@ -237,13 +236,13 @@ class EmotionStatusServiceTest extends TestCase
         // ベース感情(HAPPY)の日記を1件だけ用意 → remaining = 1
         $diary = Diary::factory()->create(['user_id' => $user->id]);
         EmotionLog::factory()->create([
-            'diary_id'       => $diary->id,
-            'emotion_state'  => EmotionState::HAPPY->value,
+            'diary_id' => $diary->id,
+            'emotion_state' => EmotionState::HAPPY->value,
         ]);
 
         $this->ruleRepository
             ->shouldReceive('getByEmotion')
-            ->andReturnUsing(fn($e) => $e === $emotion ? $rule : null);
+            ->andReturnUsing(fn ($e) => $e === $emotion ? $rule : null);
 
         $this->evaluator
             ->shouldReceive('isUnlocked')
@@ -276,7 +275,7 @@ class EmotionStatusServiceTest extends TestCase
         EmotionLog::factory()->create(['diary_id' => $d1->id, 'emotion_state' => EmotionState::HAPPY->value]);
         EmotionLog::factory()->create(['diary_id' => $d2->id, 'emotion_state' => EmotionState::HAPPY->value]);
 
-        $this->ruleRepository->shouldReceive('getByEmotion')->andReturnUsing(fn($e) => $e === $emotion ? $rule : null);
+        $this->ruleRepository->shouldReceive('getByEmotion')->andReturnUsing(fn ($e) => $e === $emotion ? $rule : null);
         $this->evaluator->shouldReceive('isUnlocked')->andReturnFalse();
 
         $statuses = $this->service->buildEmotionStatuses($user, 0);
@@ -285,7 +284,6 @@ class EmotionStatusServiceTest extends TestCase
         $this->assertSame(2, $dto->currentCount);
         $this->assertSame(0, $dto->remaining);
     }
-
 
     /**
      * 最近の感情スコアが正しく取得できることを確認するテスト
@@ -377,8 +375,6 @@ class EmotionStatusServiceTest extends TestCase
         $this->assertSame(0, $dto->currentCount);
         $this->assertNull($dto->remaining);
     }
-
-
 
     protected function tearDown(): void
     {

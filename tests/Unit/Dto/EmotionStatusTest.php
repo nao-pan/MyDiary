@@ -2,14 +2,12 @@
 
 namespace Tests\Unit\Dto;
 
-use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Foundation\Testing\WithFaker;
-use Tests\TestCase;
 use App\Dto\EmotionStatus;
+use Tests\TestCase;
 
 class EmotionStatusTest extends TestCase
 {
-    public function test_toArray()
+    public function test_to_array()
     {
         $emotionStatus = new EmotionStatus(
             key: 'happy',
@@ -42,7 +40,7 @@ class EmotionStatusTest extends TestCase
         $this->assertEquals($expectedArray, $emotionStatus->toArray());
     }
 
-    public function test_jsonSerialize()
+    public function test_json_serialize()
     {
         $emotionStatus = new EmotionStatus(
             key: 'sad',
