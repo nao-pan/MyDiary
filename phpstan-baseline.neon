@@ -1,0 +1,523 @@
+parameters:
+	ignoreErrors:
+		-
+			message: '#^Method App\\Dto\\Chart\\EmotionPieChartData\:\:__construct\(\) has parameter \$backgroundColor with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: app/Dto/Chart/EmotionPieChartData.php
+
+		-
+			message: '#^Method App\\Dto\\Chart\\EmotionPieChartData\:\:__construct\(\) has parameter \$data with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: app/Dto/Chart/EmotionPieChartData.php
+
+		-
+			message: '#^Method App\\Dto\\Chart\\EmotionPieChartData\:\:__construct\(\) has parameter \$labels with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: app/Dto/Chart/EmotionPieChartData.php
+
+		-
+			message: '#^Method App\\Dto\\Chart\\EmotionPieChartData\:\:toArray\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: app/Dto/Chart/EmotionPieChartData.php
+
+		-
+			message: '#^Method App\\Dto\\Chart\\MonthlyEmotionBarChartData\:\:__construct\(\) has parameter \$datasets with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: app/Dto/Chart/MonthlyEmotionBarChartData.php
+
+		-
+			message: '#^Method App\\Dto\\Chart\\MonthlyEmotionBarChartData\:\:__construct\(\) has parameter \$labels with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: app/Dto/Chart/MonthlyEmotionBarChartData.php
+
+		-
+			message: '#^Method App\\Dto\\Chart\\MonthlyEmotionBarChartData\:\:__construct\(\) has parameter \$options with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: app/Dto/Chart/MonthlyEmotionBarChartData.php
+
+		-
+			message: '#^Method App\\Dto\\Chart\\MonthlyEmotionBarChartData\:\:toArray\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: app/Dto/Chart/MonthlyEmotionBarChartData.php
+
+		-
+			message: '#^Method App\\Dto\\EmotionStatus\:\:jsonSerialize\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: app/Dto/EmotionStatus.php
+
+		-
+			message: '#^Method App\\Dto\\EmotionStatus\:\:toArray\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: app/Dto/EmotionStatus.php
+
+		-
+			message: '#^Match arm comparison between \$this\(App\\Enums\\EmotionState\)&App\\Enums\\EmotionState\:\:HOPEFUL and App\\Enums\\EmotionState\:\:HOPEFUL is always true\.$#'
+			identifier: match.alwaysTrue
+			count: 1
+			path: app/Enums/EmotionState.php
+
+		-
+			message: '#^Method App\\Enums\\EmotionState\:\:baseEmotions\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: app/Enums/EmotionState.php
+
+		-
+			message: '#^Method App\\Enums\\EmotionState\:\:values\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: app/Enums/EmotionState.php
+
+		-
+			message: '#^Method App\\Http\\Controllers\\Admin\\DashboardController\:\:index\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: app/Http/Controllers/Admin/DashboardController.php
+
+		-
+			message: '#^Parameter \#1 \$user of class Illuminate\\Auth\\Events\\Verified constructor expects Illuminate\\Contracts\\Auth\\MustVerifyEmail, App\\Models\\User\|null given\.$#'
+			identifier: argument.type
+			count: 1
+			path: app/Http/Controllers/Auth/VerifyEmailController.php
+
+		-
+			message: '#^Method App\\Http\\Controllers\\DiaryController\:\:index\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: app/Http/Controllers/DiaryController.php
+
+		-
+			message: '#^Method App\\Http\\Controllers\\StatusController\:\:index\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: app/Http/Controllers/StatusController.php
+
+		-
+			message: '#^Class App\\Models\\DailyMetric uses generic trait Illuminate\\Database\\Eloquent\\Factories\\HasFactory but does not specify its types\: TFactory$#'
+			identifier: missingType.generics
+			count: 1
+			path: app/Models/DailyMetric.php
+
+		-
+			message: '#^Class App\\Models\\Diary uses generic trait Illuminate\\Database\\Eloquent\\Factories\\HasFactory but does not specify its types\: TFactory$#'
+			identifier: missingType.generics
+			count: 1
+			path: app/Models/Diary.php
+
+		-
+			message: '#^Method App\\Models\\Diary\:\:emotionLog\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: app/Models/Diary.php
+
+		-
+			message: '#^Method App\\Models\\Diary\:\:tags\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: app/Models/Diary.php
+
+		-
+			message: '#^Method App\\Models\\Diary\:\:user\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: app/Models/Diary.php
+
+		-
+			message: '#^Class App\\Models\\EmotionColor uses generic trait Illuminate\\Database\\Eloquent\\Factories\\HasFactory but does not specify its types\: TFactory$#'
+			identifier: missingType.generics
+			count: 1
+			path: app/Models/EmotionColor.php
+
+		-
+			message: '#^Class App\\Models\\EmotionLog uses generic trait Illuminate\\Database\\Eloquent\\Factories\\HasFactory but does not specify its types\: TFactory$#'
+			identifier: missingType.generics
+			count: 1
+			path: app/Models/EmotionLog.php
+
+		-
+			message: '#^Method App\\Models\\EmotionLog\:\:diary\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: app/Models/EmotionLog.php
+
+		-
+			message: '#^Class App\\Models\\SocialAccount uses generic trait Illuminate\\Database\\Eloquent\\Factories\\HasFactory but does not specify its types\: TFactory$#'
+			identifier: missingType.generics
+			count: 1
+			path: app/Models/SocialAccount.php
+
+		-
+			message: '#^Method App\\Models\\SocialAccount\:\:user\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: app/Models/SocialAccount.php
+
+		-
+			message: '#^Class App\\Models\\Tag uses generic trait Illuminate\\Database\\Eloquent\\Factories\\HasFactory but does not specify its types\: TFactory$#'
+			identifier: missingType.generics
+			count: 1
+			path: app/Models/Tag.php
+
+		-
+			message: '#^Method App\\Models\\Tag\:\:diaries\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: app/Models/Tag.php
+
+		-
+			message: '#^Class App\\Models\\UnlockedEmotion uses generic trait Illuminate\\Database\\Eloquent\\Factories\\HasFactory but does not specify its types\: TFactory$#'
+			identifier: missingType.generics
+			count: 1
+			path: app/Models/UnlockedEmotion.php
+
+		-
+			message: '#^Method App\\Models\\UnlockedEmotion\:\:diary\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: app/Models/UnlockedEmotion.php
+
+		-
+			message: '#^Method App\\Models\\UnlockedEmotion\:\:user\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: app/Models/UnlockedEmotion.php
+
+		-
+			message: '#^Method App\\Models\\User\:\:createUser\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: app/Models/User.php
+
+		-
+			message: '#^Method App\\Models\\User\:\:createUser\(\) has parameter \$data with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: app/Models/User.php
+
+		-
+			message: '#^Method App\\Models\\User\:\:diaries\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: app/Models/User.php
+
+		-
+			message: '#^Method App\\Models\\User\:\:socialAccounts\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: app/Models/User.php
+
+		-
+			message: '#^Method App\\Models\\User\:\:unlockedEmotions\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: app/Models/User.php
+
+		-
+			message: '#^Class App\\Models\\UserEvent uses generic trait Illuminate\\Database\\Eloquent\\Factories\\HasFactory but does not specify its types\: TFactory$#'
+			identifier: missingType.generics
+			count: 1
+			path: app/Models/UserEvent.php
+
+		-
+			message: '#^Method App\\Rules\\EmotionUnlockRule\:\:__construct\(\) has parameter \$conditions with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: app/Rules/EmotionUnlockRule.php
+
+		-
+			message: '#^Method App\\Rules\\EmotionUnlockRule\:\:toArray\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: app/Rules/EmotionUnlockRule.php
+
+		-
+			message: '#^Method App\\Rules\\UnlockRuleRepository\:\:all\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: app/Rules/UnlockRuleRepository.php
+
+		-
+			message: '#^Method App\\Rules\\UnlockRuleRepository\:\:getByEmotion\(\) should return App\\Rules\\EmotionUnlockRule\|null but returns App\\Rules\\UnlockRule\|null\.$#'
+			identifier: return.type
+			count: 1
+			path: app/Rules/UnlockRuleRepository.php
+
+		-
+			message: '#^Property App\\Rules\\UnlockRuleRepository\:\:\$rules \(array\<App\\Rules\\UnlockRule\>\) does not accept array\<App\\Rules\\EmotionUnlockRule\>\.$#'
+			identifier: assign.propertyType
+			count: 1
+			path: app/Rules/UnlockRuleRepository.php
+
+		-
+			message: '#^Property App\\Rules\\UnlockRuleRepository\:\:\$rules has unknown class App\\Rules\\UnlockRule as its type\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Rules/UnlockRuleRepository.php
+
+		-
+			message: '#^Unable to resolve the template type TKey in call to function collect$#'
+			identifier: argument.templateType
+			count: 1
+			path: app/Rules/UnlockRuleRepository.php
+
+		-
+			message: '#^Unable to resolve the template type TValue in call to function collect$#'
+			identifier: argument.templateType
+			count: 1
+			path: app/Rules/UnlockRuleRepository.php
+
+		-
+			message: '#^Method App\\Services\\DiaryService\:\:createWithEmotion\(\) has parameter \$data with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: app/Services/DiaryService.php
+
+		-
+			message: '#^Method App\\Services\\DiaryService\:\:getCalendarEventsForUser\(\) return type with generic class Illuminate\\Support\\Collection does not specify its types\: TKey, TValue$#'
+			identifier: missingType.generics
+			count: 1
+			path: app/Services/DiaryService.php
+
+		-
+			message: '#^Method App\\Services\\DiaryService\:\:getRecentDiaries\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: app/Services/DiaryService.php
+
+		-
+			message: '#^Relation ''diary'' is not found in App\\Models\\EmotionLog model\.$#'
+			identifier: larastan.relationExistence
+			count: 2
+			path: app/Services/DiaryService.php
+
+		-
+			message: '#^Cannot call method label\(\) on string\.$#'
+			identifier: method.nonObject
+			count: 1
+			path: app/Services/EmotionChartService.php
+
+		-
+			message: '#^Method App\\Services\\EmotionChartService\:\:buildEmotionDatasets\(\) has parameter \$baseEmotions with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: app/Services/EmotionChartService.php
+
+		-
+			message: '#^Method App\\Services\\EmotionChartService\:\:buildEmotionDatasets\(\) has parameter \$emotionCounts with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: app/Services/EmotionChartService.php
+
+		-
+			message: '#^Method App\\Services\\EmotionChartService\:\:buildEmotionDatasets\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: app/Services/EmotionChartService.php
+
+		-
+			message: '#^Method App\\Services\\EmotionChartService\:\:collectEmotionCountsByMonth\(\) has parameter \$baseEmotions with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: app/Services/EmotionChartService.php
+
+		-
+			message: '#^Method App\\Services\\EmotionChartService\:\:collectEmotionCountsByMonth\(\) has parameter \$labels with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: app/Services/EmotionChartService.php
+
+		-
+			message: '#^Method App\\Services\\EmotionChartService\:\:collectEmotionCountsByMonth\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: app/Services/EmotionChartService.php
+
+		-
+			message: '#^Method App\\Services\\EmotionChartService\:\:generateMonthLabels\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: app/Services/EmotionChartService.php
+
+		-
+			message: '#^Parameter \#1 \$array \(list\<non\-falsy\-string\>\) of array_values is already a list, call has no effect\.$#'
+			identifier: arrayValues.list
+			count: 1
+			path: app/Services/EmotionChartService.php
+
+		-
+			message: '#^Relation ''diary'' is not found in App\\Models\\EmotionLog model\.$#'
+			identifier: larastan.relationExistence
+			count: 2
+			path: app/Services/EmotionChartService.php
+
+		-
+			message: '#^Method App\\Services\\EmotionLogService\:\:create\(\) has parameter \$data with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: app/Services/EmotionLogService.php
+
+		-
+			message: '#^Method App\\Services\\EmotionStatusService\:\:buildEmotionStatuses\(\) return type with generic class Illuminate\\Support\\Collection does not specify its types\: TKey, TValue$#'
+			identifier: missingType.generics
+			count: 1
+			path: app/Services/EmotionStatusService.php
+
+		-
+			message: '#^Method App\\Services\\EmotionStatusService\:\:calculateByBaseEmotion\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: app/Services/EmotionStatusService.php
+
+		-
+			message: '#^Method App\\Services\\EmotionStatusService\:\:calculateByPostCount\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: app/Services/EmotionStatusService.php
+
+		-
+			message: '#^Method App\\Services\\EmotionStatusService\:\:calculateProgress\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: app/Services/EmotionStatusService.php
+
+		-
+			message: '#^Method App\\Services\\EmotionStatusService\:\:getRecentEmotionScores\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: app/Services/EmotionStatusService.php
+
+		-
+			message: '#^Relation ''diary'' is not found in App\\Models\\EmotionLog model\.$#'
+			identifier: larastan.relationExistence
+			count: 1
+			path: app/Services/EmotionStatusService.php
+
+		-
+			message: '#^Method App\\Services\\EmotionUnlockService\:\:getUnlockedEmotions\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: app/Services/EmotionUnlockService.php
+
+		-
+			message: '#^Method App\\Services\\EventLogger\:\:log\(\) has parameter \$meta with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: app/Services/EventLogger.php
+
+		-
+			message: '#^Method App\\Services\\UnlockEvaluator\:\:evaluateComboConditions\(\) has parameter \$conditions with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: app/Services/UnlockEvaluator.php
+
+		-
+			message: '#^Unable to resolve the template type TKey in call to function collect$#'
+			identifier: argument.templateType
+			count: 1
+			path: app/Services/UnlockEvaluator.php
+
+		-
+			message: '#^Unable to resolve the template type TValue in call to function collect$#'
+			identifier: argument.templateType
+			count: 1
+			path: app/Services/UnlockEvaluator.php
+
+		-
+			message: '#^Method App\\View\\Components\\Alert\:\:__construct\(\) has parameter \$type with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: app/View/Components/Alert.php
+
+		-
+			message: '#^Property App\\View\\Components\\Alert\:\:\$type has no type specified\.$#'
+			identifier: missingType.property
+			count: 1
+			path: app/View/Components/Alert.php
+
+		-
+			message: '#^Method App\\View\\Components\\Chart\\BarChart\:\:__construct\(\) has parameter \$datasets with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: app/View/Components/Chart/BarChart.php
+
+		-
+			message: '#^Method App\\View\\Components\\Chart\\BarChart\:\:__construct\(\) has parameter \$labels with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: app/View/Components/Chart/BarChart.php
+
+		-
+			message: '#^Method App\\View\\Components\\Chart\\BarChart\:\:__construct\(\) has parameter \$options with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: app/View/Components/Chart/BarChart.php
+
+		-
+			message: '#^Return type \(array\<string, mixed\>\) of method Database\\Factories\\DailyMetricFactory\:\:definition\(\) should be compatible with return type \(array\<model property of App\\Models\\DailyMetric, mixed\>\) of method Illuminate\\Database\\Eloquent\\Factories\\Factory\<App\\Models\\DailyMetric\>\:\:definition\(\)$#'
+			identifier: method.childReturnType
+			count: 1
+			path: database/factories/DailyMetricFactory.php
+
+		-
+			message: '#^Return type \(array\<string, mixed\>\) of method Database\\Factories\\DiaryFactory\:\:definition\(\) should be compatible with return type \(array\<model property of App\\Models\\Diary, mixed\>\) of method Illuminate\\Database\\Eloquent\\Factories\\Factory\<App\\Models\\Diary\>\:\:definition\(\)$#'
+			identifier: method.childReturnType
+			count: 1
+			path: database/factories/DiaryFactory.php
+
+		-
+			message: '#^Return type \(array\<string, mixed\>\) of method Database\\Factories\\EmotionColorFactory\:\:definition\(\) should be compatible with return type \(array\<model property of App\\Models\\EmotionColor, mixed\>\) of method Illuminate\\Database\\Eloquent\\Factories\\Factory\<App\\Models\\EmotionColor\>\:\:definition\(\)$#'
+			identifier: method.childReturnType
+			count: 1
+			path: database/factories/EmotionColorFactory.php
+
+		-
+			message: '#^Return type \(array\<string, mixed\>\) of method Database\\Factories\\EmotionLogFactory\:\:definition\(\) should be compatible with return type \(array\<model property of App\\Models\\EmotionLog, mixed\>\) of method Illuminate\\Database\\Eloquent\\Factories\\Factory\<App\\Models\\EmotionLog\>\:\:definition\(\)$#'
+			identifier: method.childReturnType
+			count: 1
+			path: database/factories/EmotionLogFactory.php
+
+		-
+			message: '#^Array has 2 duplicate keys with value ''email'' \(''email'', ''email''\)\.$#'
+			identifier: array.duplicateKey
+			count: 1
+			path: database/factories/SocialAccountFactory.php
+
+		-
+			message: '#^Return type \(array\<string, mixed\>\) of method Database\\Factories\\SocialAccountFactory\:\:definition\(\) should be compatible with return type \(array\<model property of App\\Models\\SocialAccount, mixed\>\) of method Illuminate\\Database\\Eloquent\\Factories\\Factory\<App\\Models\\SocialAccount\>\:\:definition\(\)$#'
+			identifier: method.childReturnType
+			count: 1
+			path: database/factories/SocialAccountFactory.php
+
+		-
+			message: '#^Return type \(array\<string, mixed\>\) of method Database\\Factories\\TagFactory\:\:definition\(\) should be compatible with return type \(array\<model property of App\\Models\\Tag, mixed\>\) of method Illuminate\\Database\\Eloquent\\Factories\\Factory\<App\\Models\\Tag\>\:\:definition\(\)$#'
+			identifier: method.childReturnType
+			count: 1
+			path: database/factories/TagFactory.php
+
+		-
+			message: '#^Return type \(array\<string, mixed\>\) of method Database\\Factories\\UnlockedEmotionFactory\:\:definition\(\) should be compatible with return type \(array\<model property of App\\Models\\UnlockedEmotion, mixed\>\) of method Illuminate\\Database\\Eloquent\\Factories\\Factory\<App\\Models\\UnlockedEmotion\>\:\:definition\(\)$#'
+			identifier: method.childReturnType
+			count: 1
+			path: database/factories/UnlockedEmotionFactory.php
+
+		-
+			message: '#^Return type \(array\<string, mixed\>\) of method Database\\Factories\\UserEventFactory\:\:definition\(\) should be compatible with return type \(array\<model property of App\\Models\\UserEvent, mixed\>\) of method Illuminate\\Database\\Eloquent\\Factories\\Factory\<App\\Models\\UserEvent\>\:\:definition\(\)$#'
+			identifier: method.childReturnType
+			count: 1
+			path: database/factories/UserEventFactory.php
+
+		-
+			message: '#^Return type \(array\<string, mixed\>\) of method Database\\Factories\\UserFactory\:\:definition\(\) should be compatible with return type \(array\<model property of App\\Models\\User, mixed\>\) of method Illuminate\\Database\\Eloquent\\Factories\\Factory\<App\\Models\\User\>\:\:definition\(\)$#'
+			identifier: method.childReturnType
+			count: 1
+			path: database/factories/UserFactory.php
