@@ -2,23 +2,11 @@ name: CI
 
 on:
   push:
-    branches:
-      - main
-      - develop
-      - feature/*
-      - hotfix/*
-      - bugfix/*
-      - release/*
-    paths-ignore:
-      - "**/*.md"
-      - "docs/**"
+    branches: [main, develop, "feature/*", "hotfix/*", "bugfix/*", "release/*"]
+    paths-ignore: ["**/*.md","docs/**"]
   pull_request:
-    branches:
-      - main
-      - develop
-    paths-ignore:
-      - "**/*.md"
-      - "docs/**"
+    branches: [main, develop]
+    paths-ignore: ["**/*.md","docs/**"]
 
 concurrency:
   group: ci-${{ github.workflow }}-${{ github.ref }}
@@ -27,12 +15,21 @@ concurrency:
 jobs:
   test:
     runs-on: ubuntu-latest
-    env:
-      APP_ENV: testing
-      APP_KEY: base64:0000000000000000000000000000000000000000000=
-      CACHE_DRIVER: array
-      QUEUE_CONNECTION: sync
-      SESSION_DRIVER: array
+    services:
+      mysql:
+        image: mysql:8.0
+        env:
+          MYSQL_DATABASE: testing
+          MYSQL_USER: laravel
+          MYSQL_PASSWORD: password
+          MYSQL_ROOT_PASSWORD: password
+          TZ: Asia/Tokyo
+        ports: ["3306:3306"]
+        options: >-
+          --health-cmd="mysqladmin ping -ppassword"
+          --health-interval=10s
+          --health-timeout=5s
+          --health-retries=30
 
     steps:
       - uses: actions/checkout@v4
@@ -45,38 +42,46 @@ jobs:
           coverage: pcov
           extensions: mbstring, intl, pdo_mysql, bcmath, pcntl
 
-      - name: Composer install
+      - name: Install dependencies
+        run: composer install --no-interaction --prefer-dist --no-progress
+
+      # テスト専用 .env.testing を MySQL で明示
+      - name: Prepare .env.testing (MySQL)
         run: |
-            composer install --no-interaction --prefer-dist --no-progress
-            cp .env.example .env
-            php -r "file_put_contents('.env', preg_replace([
-              '/^DB_CONNECTION=.*/m',
-              '/^DB_HOST=.*/m',
-              '/^DB_PORT=.*/m',
-              '/^DB_DATABASE=.*/m',
-              '/^DB_USERNAME=.*/m',
-              '/^DB_PASSWORD=.*/m',
-            ], [
-              'DB_CONNECTION=sqlite',
-              'DB_HOST=',
-              'DB_PORT=',
-              'DB_DATABASE=',
-                'DB_USERNAME=',
-              'DB_PASSWORD=',
-            ], file_get_contents('.env')));"
-            php -r "if (!is_dir('database')) mkdir('database'); touch('database/database.sqlite');"
-            php artisan key:generate
-            php artisan config:clear
-      
-      - name: Sanity check (今の接続設定を出力)
+          cat > .env.testing <<'EOF'
+          APP_ENV=testing
+          APP_KEY=${{ env.APP_KEY || 'base64:AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=' }}
+          APP_DEBUG=true
+          DB_CONNECTION=mysql
+          DB_HOST=127.0.0.1
+          DB_PORT=3306
+          DB_DATABASE=testing
+          DB_USERNAME=laravel
+          DB_PASSWORD=password
+          CACHE_DRIVER=array
+          QUEUE_CONNECTION=sync
+          SESSION_DRIVER=array
+          MAIL_MAILER=array
+          EOF
+          php artisan key:generate
+          php artisan config:clear
+
+      - name: Wait for MySQL
         run: |
-          php -r "echo 'DB_CONNECTION='.(getenv('DB_CONNECTION')?:'').PHP_EOL;"
-          php -r "echo 'DB_DATABASE='.(getenv('DB_DATABASE')?:'').PHP_EOL;"
+          for i in {1..60}; do
+            if mysqladmin ping -h 127.0.0.1 -P 3306 -ularavel -ppassword --silent; then
+              echo "MySQL is up"; break; fi
+            echo "waiting mysql..."; sleep 2
+          done
 
       - name: Migrate
         env:
-          DB_CONNECTION: sqlite           # ← 念のため強制
-          DB_DATABASE: database/database.sqlite
+          DB_CONNECTION: mysql
+          DB_HOST: 127.0.0.1
+          DB_PORT: 3306
+          DB_DATABASE: testing
+          DB_USERNAME: laravel
+          DB_PASSWORD: password
         run: php artisan migrate --force
 
       - name: Pint (format check)
@@ -86,6 +91,13 @@ jobs:
         run: composer stan
 
       - name: PHPUnit with coverage (100% gate)
+        env:
+          DB_CONNECTION: mysql
+          DB_HOST: 127.0.0.1
+          DB_PORT: 3306
+          DB_DATABASE: testing
+          DB_USERNAME: laravel
+          DB_PASSWORD: password
         run: |
           vendor/bin/phpunit --coverage-clover coverage.xml
           php -r '
