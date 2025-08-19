@@ -13,6 +13,7 @@
 /.zed
 /auth.json
 /coverage
+/coverage-html
 /database/*.sqlite
 
 /node_modules
