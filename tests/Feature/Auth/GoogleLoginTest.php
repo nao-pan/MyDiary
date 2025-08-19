@@ -2,23 +2,21 @@
 
 namespace Tests\Feature\Auth;
 
+use App\Models\SocialAccount;
+use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Foundation\Testing\WithFaker;
 use Laravel\Socialite\Facades\Socialite;
 use Laravel\Socialite\Two\User as SocialiteUser;
 use Mockery;
-use App\Models\User;
-use App\Models\SocialAccount;
 use Tests\TestCase;
 
 class GoogleLoginTest extends TestCase
 {
-
     use RefreshDatabase;
 
     protected function mockGoogleUser(array $overrides = [])
     {
-        $googleUser = new SocialiteUser();
+        $googleUser = new SocialiteUser;
         $googleUser->id = $overrides['id'] ?? 'google-id-123';
         $googleUser->name = $overrides['name'] ?? 'Test User';
         $googleUser->email = $overrides['email'] ?? 'test@example.com';
@@ -114,7 +112,7 @@ class GoogleLoginTest extends TestCase
 
         $this->assertDatabaseHas('social_accounts', [
             'provider_name' => 'google',
-            'provider_id'   => 'null-email-id',
+            'provider_id' => 'null-email-id',
         ]);
     }
 }
