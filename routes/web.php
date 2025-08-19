@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Admin\DashboardController;
+use App\Http\Controllers\Auth\SocialAuthController;
 use App\Http\Controllers\DiaryController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\StatusController;
@@ -36,3 +37,8 @@ Route::get('/dashboard', function () {
 })->name('dashboard');
 
 require __DIR__.'/auth.php';
+
+Route::get('/auth/google/redirect', [SocialAuthController::class, 'redirect'])
+    ->name('auth.google.redirect');
+Route::get('/auth/google/callback', [SocialAuthController::class, 'callback'])
+    ->name('auth.google.callback');
