@@ -5,22 +5,22 @@ namespace App\Http\Controllers\Auth;
 use App\Http\Controllers\Controller;
 use App\Models\SocialAccount;
 use App\Models\User;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
 use Laravel\Socialite\Facades\Socialite;
+use Symfony\Component\HttpFoundation\RedirectResponse as SymfonyRedirectResponse;
 
 class SocialAuthController extends Controller
 {
     // Googleへリダイレクト
-    public function redirect()
+    public function redirect(): SymfonyRedirectResponse
     {
-        return Socialite::driver('google')
-            ->scopes(['openid', 'email', 'profile'])
-            ->redirect(); // stateはSocialiteが付与
+        return Socialite::driver('google')->redirect();
     }
 
     // Googleからのコールバック
-    public function callback()
+    public function callback(): RedirectResponse
     {
         // 通常のWeb（セッションあり）なので stateless() は不要
         // ※API/SPAなら stateless() が有用（Twitter(OAuth1.0)除く）:contentReference[oaicite:2]{index=2}
