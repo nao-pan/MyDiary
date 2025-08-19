@@ -57,12 +57,12 @@
         </p>
     </div>
     {{-- ✅ ソーシャルログインのリンクを追加 --}}
-    {{-- <div class="mt-6 text-center">
+    <div class="mt-6 text-center">
         <p class="text-sm text-gray-600 dark:text-gray-400">
             {{ __("または") }}
-            <a href="{{ route('login.social', 'google') }}" class="text-pink-600 hover:underline">
+            <a href="{{ route('auth.google.redirect') }}" class="text-pink-600 hover:underline">
                 {{ __('Googleでログイン') }}
             </a>
         </p>
-    </div> --}}
+    </div>
 @endsection

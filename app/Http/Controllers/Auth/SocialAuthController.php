@@ -5,6 +5,9 @@ namespace App\Http\Controllers\Auth;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use Laravel\Socialite\Facades\Socialite;
+use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Validation\Rules;
 use App\Models\User;
 use App\Models\SocialAccount;
 use Illuminate\Http\Request;
@@ -12,24 +15,53 @@ use Illuminate\Http\Request;
 class SocialAuthController extends Controller
 {
     // Googleへリダイレクト
-    public function redirectToGoogle()
+    public function redirect()
     {
-        return Socialite::driver('google')->redirect();
+        return Socialite::driver('google')
+            ->scopes(['openid', 'email', 'profile'])
+            ->redirect(); // stateはSocialiteが付与
     }
 
     // Googleからのコールバック
-    public function handleGoogleCallback()
+    public function callback()
     {
-        $googleUser = Socialite::driver('google')->stateless()->user();
+        // 通常のWeb（セッションあり）なので stateless() は不要
+        // ※API/SPAなら stateless() が有用（Twitter(OAuth1.0)除く）:contentReference[oaicite:2]{index=2}
+        $oauth = Socialite::driver('google')->user();
 
-        // social_accounts に保存 or 既存ユーザー紐づけ
-        $user = User::firstOrCreate(
-            ['email' => $googleUser->getEmail()],
-            ['name' => $googleUser->getName()]
-        );
+        // 既存の紐付けがあればそのままログイン
+        $linked = SocialAccount::where([
+            'provider_name' => 'google',
+            'provider_id'   => $oauth->getId(),
+        ])->first();
 
-        Auth::login($user);
+        if ($linked) {
+            Auth::login($linked->user, remember: true);
+            return redirect()->intended(route('diary.index'));
+        }
 
-        return redirect()->route('diary.index');
+        // メールが取れたら既存ユーザーに紐付け、無ければ新規
+        $user = $oauth->getEmail()
+            ? User::where('email', $oauth->getEmail())->first()
+            : null;
+
+        if (!$user) {
+            $user = User::create([
+                'name'     => $oauth->getName() ?: 'User_' . Str::random(6),
+                'nickname' => $oauth->getName() ?: 'User_' . Str::random(6),
+                'email'    => $oauth->getEmail() ?? (Str::uuid() . '@example.invalid'),
+                'password' => bcrypt(Str::random(32)),
+            ]);
+        }
+
+        $user->socialAccounts()->create([
+            'provider_name' => 'google',
+            'provider_id'   => $oauth->getId(),
+            'email'         => $oauth->getEmail(),
+            'avatar'        => $oauth->getAvatar(),
+        ]);
+
+        Auth::login($user, remember: true);
+        return redirect()->intended(route('diary.index'));
     }
 }

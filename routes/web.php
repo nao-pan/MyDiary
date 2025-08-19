@@ -40,6 +40,6 @@ require __DIR__.'/auth.php';
 
 
 Route::get('/auth/google/redirect', [SocialAuthController::class, 'redirect'])
-     ->name('oauth.google.redirect');
+     ->name('auth.google.redirect');
 Route::get('/auth/google/callback', [SocialAuthController::class, 'callback'])
-     ->name('oauth.google.callback');
+     ->name('auth.google.callback');

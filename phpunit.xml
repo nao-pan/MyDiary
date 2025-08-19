@@ -18,7 +18,15 @@
         </include>
         <exclude>
             <!-- Laravel Breeze の Auth コントローラを除外 -->
-            <directory>app/Http/Controllers/Auth</directory>
+            <file>app/Http/Controllers/Auth/AuthenticatedSessionController.php</file>
+            <file>app/Http/Controllers/Auth/ConfirmablePasswordController.php</file>
+            <file>app/Http/Controllers/Auth/EmailVerificationNotificationController.php</file>
+            <file>app/Http/Controllers/Auth/EmailVerificationPromptController.php</file>
+            <file>app/Http/Controllers/Auth/NewPasswordController.php</file>
+            <file>app/Http/Controllers/Auth/PasswordController.php</file>
+            <file>app/Http/Controllers/Auth/PasswordResetLinkController.php</file>
+            <file>app/Http/Controllers/Auth/RegisteredUserController.php</file>
+            <file>app/Http/Controllers/Auth/VerifyEmailController.php</file>
             <!-- アプリ共通のServiceProvider（テスト不要） -->
             <file>app/Providers/AppServiceProvider.php</file>
             <!-- データ加工を行わない単純なViewコンポーネント -->
